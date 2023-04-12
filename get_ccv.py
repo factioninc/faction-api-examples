@@ -3,7 +3,7 @@ import requests
 from auth import get_token  # see auth.py for more details
 
 CCV_URL = 'https://api.factioninc.com/v1/ccv/volumes'
-ORGANIZATION_ID = 'b356915e-8083-4ca3-8853-9b2bdadecef9'
+ORGANIZATION_ID = '<Your Organization ID>'
 
 token = get_token()
 
