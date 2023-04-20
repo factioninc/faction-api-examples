@@ -1,0 +1,1641 @@
+openapi: 3.0.3
+info:
+  title: Faction Public APIs
+  description: "Faction Public APIs\n<br/><br/>\n\xA9 2023 Faction, Inc. All rights\
+    \ reserved\n"
+  version: v1 and v2
+servers:
+- url: https://api.factioninc.com
+- url: https://api.factionstaging.com
+- url: https://api.factiondev.com
+paths:
+  /v1/organizations:
+    get:
+      description: Provides a list of organizations.  This could be a list of all
+        organizations, the current organization, or a list of assigned organizations
+        (for OEMs) based on the user access level.
+      summary: Gets list of organizations.
+      operationId: organizationsGet
+      tags:
+      - Organizations
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v1/organizations/{organizationId}:
+    get:
+      description: Returns the information on a single organization, based on the
+        Organization Identifier provided.
+      summary: Returns the information on a single organization, based on the Organization
+        Identifier provided.
+      operationId: organizationIdGet
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - $ref: '#/components/parameters/X-Organization-Id'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v1/organizations/{organizationId}/roles:
+    get:
+      tags:
+      - Organizations
+      summary: Get organization's roles
+      description: Get organization's roles
+      operationId: organizationRolesGet
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Roles'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v1/organizations/{organizationId}/sso:
+    get:
+      description: Returns a SSO object
+      summary: Returns a SSO object
+      operationId: ssoGet
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSOGet'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    post:
+      description: Gets Service Provider (SP) callback url based upon client ID, secrets,
+        discovery URI and claim attributes.
+      summary: Gets service provider information.
+      operationId: ssoPost
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SSOPostBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SPCallBack'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    put:
+      description: Updates Service Provider SSO Object.
+      summary: Updates Service Provider SSO Object.
+      operationId: ssoPut
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SSO'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    delete:
+      description: Deletes the customer's IDP association with Factions Service Provider.
+      summary: Deletes the customer's IDP association with Factions Service Provider.
+      operationId: ssoDelete
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSODeleted'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v1/organizations/{organizationId}/sso/groups:
+    get:
+      description: Returns a list of groups with their associated mapping of customer
+        groups to Faction SP roles (federation)
+      summary: Returns list of organization's SSO groups.
+      operationId: ssoGroupsGet
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Groups'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    post:
+      description: Maps customer group to Faction IDP roles and returns the groupId
+        with its associated Faction roles.
+      summary: Create SSO group.
+      operationId: ssoGroupsPost
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Groups'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Groups'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v1/organizations/{organizationId}/sso/groups/{groupId}:
+    delete:
+      description: Deletes the customer's group association with Faction's IDP.
+      summary: Delete SSO group.
+      operationId: ssoGroupIdDelete
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: groupId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupDeleted'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    put:
+      description: Modify a customer's role and/or group name associated with it's
+        Group ID
+      summary: Update SSO group.
+      operationId: ssoGroupIdPut
+      tags:
+      - Organizations
+      parameters:
+      - name: organizationId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: groupId
+        in: path
+        schema:
+          type: string
+          format: uuid
+          nullable: false
+        required: true
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Groups'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Groups'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v2/fix/connections:
+    post:
+      description: Create a new FIX Connection.
+      summary: Create a new FIX Connection.
+      operationId: create_connection
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFixConnection'
+            examples:
+              AwsExample:
+                value:
+                  connectionType: cloud
+                  connectionData:
+                    connectionSubType: aws_direct_connect
+                    providerRegion: us-east-1
+                    factionLocations:
+                    - DC15
+                    bandwidth: 12
+                    accountId: exampleinc
+                    crossCloudEnabled: true
+              AzureExample:
+                value:
+                  connectionType: cloud
+                  connectionData:
+                    connectionSubType: azure_express_route_circuit
+                    providerRegion: eastus
+                    factionLocations:
+                    - DC15
+                    bandwidth: 5
+              GoogleExample:
+                value:
+                  connectionType: cloud
+                  connectionData:
+                    connectionSubType: gcp_partner_interconnect
+                    providerRegion: eastus
+                    factionLocations:
+                    - DC15
+                    bandwidth: 2
+                    pairingKey: key1
+              OracleExample:
+                value:
+                  connectionType: cloud
+                  connectionData:
+                    connectionSubType: oci_fast_connect
+                    providerRegion: eastus
+                    factionLocations:
+                    - DC15
+                    bandwidth: 3
+                    tenancy: secret1
+                    localPeeringGateway: key1
+              InternetExample:
+                value:
+                  connectionType: internet
+                  connectionData:
+                    factionLocations:
+                    - DC15
+                    bandwidth: 14
+              InterRegionExample:
+                value:
+                  connectionType: interRegion
+                  connectionData:
+                    factionLocations:
+                    - DC15
+                    - CHI1
+                    bandwidth: 14
+              PrivateFacilityBackboneExample:
+                value:
+                  connectionType: private
+                  connectionData:
+                    connectionSubType: facility_backbone_connection
+                    factionLocations:
+                    - DC15
+                    bandwidth: 5
+              PrivateIntrafacilityExample:
+                value:
+                  connectionType: private
+                  connectionData:
+                    connectionSubType: intrafacility_cross_connect
+                    factionLocations:
+                    - DC15
+                    bandwidth: 10
+              PrivateSdnProviderExample:
+                value:
+                  connectionType: private
+                  connectionData:
+                    connectionSubType: sdn_provider_connection
+                    factionLocations:
+                    - DC15
+                    bandwidth: 1
+              PrivateTraditionalCircuitExample:
+                value:
+                  connectionType: private
+                  connectionData:
+                    connectionSubType: traditional_circuit
+                    factionLocations:
+                    - DC15
+                    bandwidth: 10
+      responses:
+        '202':
+          description: Success
+          headers:
+            Location:
+              description: GET <url>/v1/fix/connections/{connectionId}/requests/{requestId}
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/FixConnection'
+        '401':
+          description: Error Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    get:
+      description: Returns a list of the Fix Connections.
+      summary: Returns a list of the Fix Connections.
+      operationId: get_connections
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FixConnection'
+              examples:
+                CloudTypeExample:
+                  value:
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d672256165
+                    connectionType: cloud
+                    connectionData:
+                      bandwidth: 2
+                      bandwidthUnits: gbps
+                      connectionSubType: azure_express_route_circuit
+                      factionLocations:
+                      - DC15
+                      providerRegion: us-east-1
+                      crossCloudEnabled: false
+                    active: true
+                    state: Ready
+                  - identifier: 00d6hhddfa-f1df-4af6-be2b-71d67246386467
+                    connectionType: cloud
+                    connectionData:
+                      bandwidth: 5
+                      bandwidthUnits: gbps
+                      connectionSubType: aws_direct_connect
+                      factionLocations:
+                      - DC15
+                      providerRegion: us-east-1
+                      accountId: exampleinc
+                      vifIds:
+                      - gfhgdfjhd-yrueyr88
+                      - 123-gggg
+                      crossCloudEnabled: true
+                    active: true
+                    state: Ready
+                  - identifier: d620e245-89cd-4a0d-b819-ffbd0f30781d
+                    connectionType: cloud
+                    connectionData:
+                      bandwidth: 5
+                      bandwidthUnits: gbps
+                      connectionSubType: gcp_partner_interconnect
+                      factionLocations:
+                      - DC15
+                      providerRegion: us-east-1
+                      pairingKey: key1
+                      crossCloudEnabled: false
+                    active: true
+                    state: Ready
+                  - identifier: d9d6dd76-861f-4ac3-b960-16b8630515c4
+                    connectionType: cloud
+                    connectionData:
+                      bandwidth: 5
+                      bandwidthUnits: gbps
+                      connectionSubType: oci_fast_connect
+                      factionLocations:
+                      - DC15
+                      providerRegion: us-east-1
+                      tenancy: ''
+                      localPeeringGateway: ''
+                      crossCloudEnabled: false
+                    active: true
+                    state: Ready
+                PrivateTypeExample:
+                  value:
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
+                    connectionType: private
+                    connectionData:
+                      bandwidth: 1
+                      bandwidthUnits: gbps
+                      connectionSubType: sdn_provider_connection
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
+                    connectionType: private
+                    connectionData:
+                      bandwidth: 1
+                      bandwidthUnits: gbps
+                      connectionSubType: facility_backbone_connection
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
+                    connectionType: private
+                    connectionData:
+                      bandwidth: 1
+                      bandwidthUnits: gbps
+                      connectionSubType: intrafacility_cross_connect
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
+                    connectionType: private
+                    connectionData:
+                      bandwidth: 1
+                      bandwidthUnits: gbps
+                      connectionSubType: traditional_circuit
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                InternetTypeExample:
+                  value:
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d6722800089
+                    connectionType: internet
+                    connectionData:
+                      bandwidth: 10
+                      bandwidthUnits: gbps
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                InterRegionTypeExample:
+                  value:
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d672277779
+                    connectionType: interRegion
+                    connectionData:
+                      bandwidth: 5
+                      bandwidthUnits: gbps
+                      factionLocations:
+                      - UK1
+                      - FR7
+                    active: true
+                    state: Ready
+        '401':
+          description: Error Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v2/fix/connections/{connectionId}:
+    get:
+      description: Returns a single Fix Connection by Identifier.
+      summary: Returns a single Fix Connection by Identifier.
+      operationId: get_connection
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: connectionId
+        in: path
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixConnection'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    patch:
+      description: Updates attributes of a single connection.
+      summary: Updates attributes of a single connection.
+      operationId: patch_connection
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: connectionId
+        in: path
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchFixConnection'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixConnection'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    delete:
+      description: Removes an active connection.
+      summary: Removes an active connection.
+      operationId: delete_connection
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: connectionId
+        in: path
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixConnection'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+components:
+  parameters:
+    X-Organization-Id:
+      description: Required Organization Id
+      in: header
+      name: X-Organization-Id
+      schema:
+        type: string
+        format: uuid
+        nullable: false
+      required: true
+  schemas:
+    ErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 500
+        error: Internal Server Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorNotFound:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 404
+        error: Resource Not Found Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorUnauthorized:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 401
+        error: Provided authorization information is invalid
+        message: Unauthorized
+        detail: Valid authorization bearer token is required
+        path: /the/called/path-here
+    Organization:
+      required:
+      - name
+      - identifier
+      - orgCode
+      type: object
+      properties:
+        orgCode:
+          type: string
+        identifier:
+          type: string
+          format: uuid
+        name:
+          type: string
+        pingPopulationId:
+          type: string
+          format: uuid
+      additionalProperties: false
+      example:
+        identifier: 23f8bfa4-3737-44b6-a74e-0603a01fc25a
+        orgCode: ACME
+        name: ACME Corporation
+        pingPopulationId: 1d0aa3fc-1d1f-4ea2-a21f-18ffea350df2
+    SSO:
+      type: object
+      required:
+      - clientId
+      - clientSecret
+      - discoveryUri
+      - userName
+      - email
+      - externalAuthorization
+      properties:
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        discoveryUri:
+          type: string
+        userName:
+          type: string
+          enum:
+          - providerAttributes.sub
+        email:
+          type: string
+          enum:
+          - providerAttributes.email
+        externalAuthorization:
+          type: string
+          enum:
+          - externalAuthorization
+      additionalProperties: false
+      example:
+        clientId: xddr5-678
+        discoveryUri: https://example.com/discovery
+        clientSecret: mysecret
+        userName: providerAttributes.sub
+        email: providerAttributes.email
+        externalAuthorization: externalAuthorization
+    SSOGet:
+      allOf:
+      - $ref: '#/components/schemas/SSO'
+      - type: object
+        properties:
+          callbackUrl:
+            type: string
+        required:
+        - callbackUrl
+        example:
+          callbackUrl: https://auth.factiondev.com/rp/callback/openid_connect
+    SSOPostBody:
+      allOf:
+      - $ref: '#/components/schemas/SSO'
+      - type: object
+        properties:
+          mfaAttest:
+            type: boolean
+        required:
+        - mfaAttest
+        example:
+          mfaAttest: true
+    Groups:
+      required:
+      - identifier
+      - groupName
+      - roles
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        groupName:
+          type: string
+          example: Portal_Users
+        roles:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Role'
+          example:
+          - User
+          - Technician
+          - vpn_dc15_e01
+    Role:
+      anyOf:
+      - $ref: '#/components/schemas/PortalRole'
+      - type: string
+        example: vpn_dc15_e01
+    PortalRole:
+      type: string
+      enum:
+      - User
+      - Technician
+      - Org_Admin
+      - Group_Admin
+    Roles:
+      type: object
+      properties:
+        portalRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortalRole'
+          example:
+          - User
+          - Technician
+          - Org_Admin
+          - Group_Admin
+        vpnRoles:
+          type: array
+          items:
+            type: string
+            example: vpn_dc15_e01
+    GroupDeleted:
+      type: boolean
+      properties:
+        Deleted:
+          type: boolean
+      example:
+        groupDeleted: true
+    SSODeleted:
+      type: boolean
+      properties:
+        ssoDeleted:
+          type: boolean
+      example:
+        ssoDeleted: true
+    SPCallBack:
+      type: string
+      properties:
+        SPcallBackUri:
+          type: boolean
+      example:
+        SPcallBackUri: https://auth.pingone.com/51441281-305c-4e91-acc0-233470671c49/rp/callback/openid_connect
+    FactionConnectionLocations:
+      type: array
+      minItems: 1
+      items:
+        type: string
+      example:
+      - DC15
+    CreateFixConnection:
+      required:
+      - connectionType
+      - connectionData
+      type: object
+      properties:
+        connectionType:
+          $ref: '#/components/schemas/ConnectionType'
+        connectionData:
+          oneOf:
+          - $ref: '#/components/schemas/CloudConnection'
+          - $ref: '#/components/schemas/InternetConnection'
+          - $ref: '#/components/schemas/InterRegionConnection'
+          - $ref: '#/components/schemas/PrivateConnection'
+      example:
+        connectionType: cloud
+        connectionData:
+          connectionSubType: azure
+          providerRegion: us-east-1
+          factionLocations:
+          - DC15
+          bandwidth: 3
+          crossCloudEnabled: true
+    PatchFixConnection:
+      type: object
+      properties:
+        bandwidth:
+          description: Expected bandwidth in Gbps
+          maximum: 1024
+          minimum: 0
+          type: number
+        crossCloud:
+          description: Enable or disable transitive (cross-cloud) routing.
+          type: boolean
+      example:
+        bandwidth: 3
+        crossCloud: true
+    FixConnection:
+      type: object
+      properties:
+        connectionType:
+          $ref: '#/components/schemas/ConnectionType'
+        connectionData:
+          oneOf:
+          - $ref: '#/components/schemas/CloudConnection'
+          - $ref: '#/components/schemas/PrivateConnection'
+          - $ref: '#/components/schemas/InternetConnection'
+          - $ref: '#/components/schemas/InterRegionConnection'
+        identifier:
+          type: string
+          format: uuid
+        state:
+          $ref: '#/components/schemas/FixConnectionState'
+        active:
+          $ref: '#/components/schemas/Active'
+        requestedChanges:
+          type: object
+    CloudConnection:
+      type: object
+      properties:
+        schema:
+          oneOf:
+          - $ref: '#/components/schemas/AwsFixConnection'
+          - $ref: '#/components/schemas/AzureFixConnection'
+          - $ref: '#/components/schemas/GcpFixConnection'
+          - $ref: '#/components/schemas/OciFixConnection'
+    AwsFixConnection:
+      required:
+      - bandwidth
+      - connectionSubType
+      - factionLocations
+      - providerRegion
+      - accountId
+      type: object
+      properties:
+        bandwidth:
+          description: The expected connection in Gbps
+          maximum: 1024
+          minimum: 0
+          type: number
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+        connectionSubType:
+          type: string
+          enum:
+          - aws
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          maxItems: 1
+          example:
+          - DC15
+        providerRegion:
+          type: string
+          nullable: false
+        accountId:
+          maxLength: 128
+          minLength: 0
+          type: string
+          nullable: true
+        vifIds:
+          type: array
+          items:
+            type: string
+        crossCloudEnabled:
+          type: boolean
+      additionalProperties: false
+    AzureFixConnection:
+      required:
+      - bandwidth
+      - connectionSubType
+      - factionLocations
+      - providerRegion
+      type: object
+      properties:
+        bandwidth:
+          description: The expected connection in Gbps
+          type: number
+          enum:
+          - 1
+          - 2
+          - 5
+          - 10
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+        connectionSubType:
+          type: string
+          enum:
+          - azure
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          maxItems: 1
+          example:
+          - DC15
+        providerRegion:
+          type: string
+          nullable: false
+        crossCloudEnabled:
+          type: boolean
+      additionalProperties: false
+    GcpFixConnection:
+      required:
+      - bandwidth
+      - connectionSubType
+      - factionLocations
+      - providerRegion
+      - pairingKey
+      type: object
+      properties:
+        bandwidth:
+          description: The expected connection in Gbps
+          type: number
+          enum:
+          - 1
+          - 2
+          - 5
+          - 10
+          - 20
+          - 40
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+        connectionSubType:
+          type: string
+          enum:
+          - gcp
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          maxItems: 1
+          example:
+          - DC15
+        pairingKey:
+          type: string
+        providerRegion:
+          type: string
+          nullable: false
+        crossCloudEnabled:
+          type: boolean
+      additionalProperties: false
+    OciFixConnection:
+      required:
+      - bandwidth
+      - connectionSubType
+      - factionLocations
+      - providerRegion
+      - tenancy
+      - localPeeringGateway
+      type: object
+      properties:
+        bandwidth:
+          description: The expected connection in Gbps
+          type: number
+          enum:
+          - 1
+          - 2
+          - 3
+          - 5
+          - 10
+          - 20
+          - 40
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+        connectionSubType:
+          type: string
+          enum:
+          - oci
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          minItems: 1
+          maxItems: 1
+          example:
+          - DC15
+        tenancy:
+          maxLength: 255
+          minLength: 0
+          type: string
+        localPeeringGateway:
+          type: string
+        providerRegion:
+          type: string
+          nullable: false
+        crossCloudEnabled:
+          type: boolean
+      additionalProperties: false
+    PrivateConnection:
+      type: object
+      properties:
+        schema:
+          oneOf:
+          - $ref: '#/components/schemas/FacilityBackboneFixConnection'
+          - $ref: '#/components/schemas/IntrafacilityFixConnection'
+          - $ref: '#/components/schemas/SdnProviderFixConnection'
+          - $ref: '#/components/schemas/TraditionalCircuitFixConnection'
+    FacilityBackboneFixConnection:
+      required:
+      - bandwidth
+      - connectionSubType
+      - factionLocations
+      type: object
+      properties:
+        bandwidth:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 5
+          - 10
+          - 20
+          - 40
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+        connectionSubType:
+          type: string
+          enum:
+          - facility_backbone_connection
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          maxItems: 1
+          example:
+          - DC15
+    IntrafacilityFixConnection:
+      required:
+      - bandwidth
+      - connectionSubType
+      - factionLocations
+      type: object
+      properties:
+        bandwidth:
+          type: integer
+          enum:
+          - 1
+          - 10
+          - 100
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+        connectionSubType:
+          type: string
+          enum:
+          - intrafacility_cross_connect
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          maxItems: 1
+          example:
+          - DC15
+    SdnProviderFixConnection:
+      required:
+      - bandwidth
+      - connectionSubType
+      - factionLocations
+      type: object
+      properties:
+        bandwidth:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 5
+          - 10
+          - 40
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+        connectionSubType:
+          type: string
+          enum:
+          - sdn_provider_connection
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          maxItems: 1
+          example:
+          - DC15
+    TraditionalCircuitFixConnection:
+      required:
+      - bandwidth
+      - connectionSubType
+      - factionLocations
+      type: object
+      properties:
+        bandwidth:
+          type: integer
+          enum:
+          - 1
+          - 10
+          - 100
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+        connectionSubType:
+          type: string
+          enum:
+          - traditional_circuit
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          maxItems: 1
+          example:
+          - DC15
+    InternetConnection:
+      required:
+      - bandwidth
+      - factionLocations
+      type: object
+      properties:
+        bandwidth:
+          description: The expected connection in Gbps
+          maximum: 100
+          minimum: 1
+          type: number
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          maxItems: 1
+          minItems: 1
+          example:
+          - DC15
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+    InterRegionConnection:
+      required:
+      - factionLocations
+      - bandwidth
+      type: object
+      properties:
+        factionLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FactionConnectionLocations'
+          minItems: 2
+          maxItems: 2
+          example:
+          - DC15
+          - CHI1
+        bandwidth:
+          description: Throughput capacity of the connection
+          maximum: 1024
+          minimum: 1
+          type: number
+        bandwidthUnits:
+          $ref: '#/components/schemas/BandwidthUnits'
+    BandwidthUnits:
+      type: string
+      enum:
+      - gbps
+      - mbps
+    FixConnectionState:
+      type: string
+      enum:
+      - Ready
+      - Active
+      - DeletionRequested
+      - DeletionOnHold
+      - AdjustBandwidthRequested
+      - AdjustBandwidthOnHold
+      - Inactive
+    ConnectionType:
+      type: string
+      enum:
+      - cloud
+      - internet
+      - interRegion
+      - private
+    Active:
+      type: boolean
+      default: false
