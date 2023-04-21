@@ -4,7 +4,7 @@ This directory contains several Python 3 scripts for Faction customers to execut
 
 ## Getting Started
 
-Before using the the examples you will need to know several credentials which you will need to insert into the code.  Those credentials are as follows:
+Before using the examples you will need to know several credentials which you will need to insert into the code.  Those credentials are as follows:
 
 - Organization Id
 - Client Id
