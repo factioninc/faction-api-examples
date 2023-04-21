@@ -565,7 +565,7 @@ paths:
                     - DC15
                     bandwidth: 12
                     accountId: exampleinc
-                    crossCloudEnabled: true
+                    crossCloud: true
               AzureExample:
                 value:
                   connectionType: cloud
@@ -700,7 +700,7 @@ paths:
                       factionLocations:
                       - DC15
                       providerRegion: us-east-1
-                      crossCloudEnabled: false
+                      crossCloud: false
                     active: true
                     state: Ready
                   - identifier: 00d6hhddfa-f1df-4af6-be2b-71d67246386467
@@ -716,7 +716,7 @@ paths:
                       vifIds:
                       - gfhgdfjhd-yrueyr88
                       - 123-gggg
-                      crossCloudEnabled: true
+                      crossCloud: true
                     active: true
                     state: Ready
                   - identifier: d620e245-89cd-4a0d-b819-ffbd0f30781d
@@ -729,7 +729,7 @@ paths:
                       - DC15
                       providerRegion: us-east-1
                       pairingKey: key1
-                      crossCloudEnabled: false
+                      crossCloud: false
                     active: true
                     state: Ready
                   - identifier: d9d6dd76-861f-4ac3-b960-16b8630515c4
@@ -743,7 +743,7 @@ paths:
                       providerRegion: us-east-1
                       tenancy: ''
                       localPeeringGateway: ''
-                      crossCloudEnabled: false
+                      crossCloud: false
                     active: true
                     state: Ready
                 PrivateTypeExample:
@@ -1245,7 +1245,7 @@ components:
           factionLocations:
           - DC15
           bandwidth: 3
-          crossCloudEnabled: true
+          crossCloud: true
     PatchFixConnection:
       type: object
       properties:
@@ -1328,7 +1328,7 @@ components:
           type: array
           items:
             type: string
-        crossCloudEnabled:
+        crossCloud:
           type: boolean
       additionalProperties: false
     AzureFixConnection:
@@ -1363,7 +1363,7 @@ components:
         providerRegion:
           type: string
           nullable: false
-        crossCloudEnabled:
+        crossCloud:
           type: boolean
       additionalProperties: false
     GcpFixConnection:
@@ -1403,7 +1403,7 @@ components:
         providerRegion:
           type: string
           nullable: false
-        crossCloudEnabled:
+        crossCloud:
           type: boolean
       additionalProperties: false
     OciFixConnection:
@@ -1450,7 +1450,7 @@ components:
         providerRegion:
           type: string
           nullable: false
-        crossCloudEnabled:
+        crossCloud:
           type: boolean
       additionalProperties: false
     PrivateConnection:
@@ -1622,12 +1622,8 @@ components:
     FixConnectionState:
       type: string
       enum:
-      - Ready
       - Active
-      - DeletionRequested
-      - DeletionOnHold
-      - AdjustBandwidthRequested
-      - AdjustBandwidthOnHold
+      - ChangeRequested
       - Inactive
     ConnectionType:
       type: string
