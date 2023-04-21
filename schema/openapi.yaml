@@ -1,13 +1,29 @@
 openapi: 3.0.3
 info:
   title: Faction Public APIs
-  description: "Faction Public APIs\n<br/><br/>\n\xA9 2023 Faction, Inc. All rights\
-    \ reserved\n"
+  description: "\xA9 2023 Faction, Inc. All rights reserved\n\nWelcome to the Faction\
+    \ Public APIs!  Our Faction Public APIs allow us and our customers to configure,\
+    \ provision, and monitor Faction infrastructure.  Faction uses these APIs to build\
+    \ our portal [https://portal.factioninc.com](https://portal.factioninc.com) and\
+    \ can also be used by our customers with their systems to create a seamless integration\
+    \ with Faction.\n\nThe hierarchical structure of our APIs is by **version** (e.g.,\
+    \ v1, v2) and **namespace** (e.g., fix).\n\nOur version approach is to only create\
+    \ a new API when it breaks backward compatibility.  Hence, a new version will\
+    \ NOT be a complete copy of all of the previous version APIs, but only those that\
+    \ have changed\n\nNamespaces are a way we group our APIs by common functionality.\
+    \ This grouping makes it easier to discover the right API for the functionality\
+    \ you wish to use.\n\nWe also have a public Github repository where you can fork\
+    \ to run some of client API code (in Python) and the complete OpenAPI 3 spec we\
+    \ use to build and deploy our APIs.  Our repo is located here: [https://github.com/factioninc/faction-api-examples](https://github.com/factioninc/faction-api-examples)\n\
+    \nOur current Public APIs contain the following versions and namespaces:\n\n\n\
+    \n| Version | Namespace     | Description                                    \
+    \              |\n| ------- | ------------- | ------------------------------------------------------------\
+    \ |\n| v1      | organizations | Provides information about organizations.   \
+    \                 |\n| v2      | fix           | Provides information about fix\
+    \ (Faction Internetwork eXchange) connections |\n"
   version: v1 and v2
 servers:
 - url: https://api.factioninc.com
-- url: https://api.factionstaging.com
-- url: https://api.factiondev.com
 paths:
   /v1/organizations:
     get:
