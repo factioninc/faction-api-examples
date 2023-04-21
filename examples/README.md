@@ -59,8 +59,8 @@ Add your organization Id
 
 ### Get CCV
 
-The **get_ccv.py** returns a list of your ccvs.  This file needs to be configured with your organization id just in the **create_fix_connection.py** file
+The **get_ccv.py** returns a list of your ccvs.  This file needs to be configured with your organization id just like in the **create_fix_connection.py** file
 
 ### Get FIX Connections
 
-The **get_fix_connections.py** returns a list of your FIX connections.  This file needs to be configured with your organization id just in the **create_fix_connection.py** file
+The **get_fix_connections.py** returns a list of your FIX connections.  This file needs to be configured with your organization id just like in the **create_fix_connection.py** file
