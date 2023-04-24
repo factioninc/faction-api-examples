@@ -1,7 +1,7 @@
 {
   "settingsInheritedFrom": "factioninc/whitesource-config@main",
    "scanSettings": {
-     "baseBranches": []
+     "baseBranches": [] 
   },
    "remediateSettings": {
      "baseBranches": ["main"]
