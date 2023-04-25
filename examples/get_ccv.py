@@ -1,5 +1,4 @@
 import requests
-
 from auth import get_token  # see auth.py for more details
 
 CCV_URL = 'https://api.factioninc.com/v1/ccv/volumes'
