@@ -26,6 +26,319 @@ info:
 servers:
 - url: https://api.factioninc.com
 paths:
+  /v1/ccv/volumes:
+    get:
+      summary: Get all CCVs
+      description: Returns a list of the CCV volumes provisioned for an organization
+        based on the Organization Identifier.
+      operationId: ccvVolumeGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CCV'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}:
+    get:
+      summary: Get CCV by ID
+      description: Returns the information regarding a particular CCV based on the
+        Organization Identifier and the Service Identifier.
+      operationId: ccvVolumeIdGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCV'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}/metrics:
+    get:
+      summary: Get CCV metrics
+      description: Gets the metrics for the CCV with the provided ccvId.
+      operationId: ccvVolumeMetricsGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - name: metricsType
+        in: query
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CCVMetricsType'
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCVMetrics'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/organizations:
     get:
       description: Provides a list of organizations.  This could be a list of all
@@ -531,6 +844,8 @@ paths:
               explode: false
               schema:
                 type: string
+      security:
+      - userManagementAuthorizer: []
     put:
       description: Updates Service Provider SSO Object.
       summary: Updates Service Provider SSO Object.
@@ -1227,319 +1542,6 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/ccv/volumes:
-    get:
-      summary: Get all CCVs
-      description: Returns a list of the CCV volumes provisioned for an organization
-        based on the Organization Identifier.
-      operationId: ccvVolumeGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CCV'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}:
-    get:
-      summary: Get CCV by ID
-      description: Returns the information regarding a particular CCV based on the
-        Organization Identifier and the Service Identifier.
-      operationId: ccvVolumeIdGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCV'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}/metrics:
-    get:
-      summary: Get CCV metrics
-      description: Gets the metrics for the CCV with the provided ccvId.
-      operationId: ccvVolumeMetricsGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - name: metricsType
-        in: query
-        schema:
-          type: array
-          items:
-            $ref: '#/components/schemas/CCVMetricsType'
-        required: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCVMetrics'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v2/fix/connections:
     post:
       description: Create a new FIX Connection.
@@ -1985,6 +1987,227 @@ components:
         nullable: false
       required: true
   schemas:
+    CCV:
+      required:
+      - identifier
+      - factionLocationId
+      - iqns
+      - name
+      - networks
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        type:
+          type: string
+        tier:
+          type: string
+        totalSizeInGB:
+          type: integer
+          format: int64
+          nullable: true
+        usedSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        iops:
+          minimum: 0
+          type: number
+          format: float
+        sloThroughput:
+          maximum: 9223372036854776000
+          minimum: 0
+          type: integer
+          format: int64
+        factionLocationId:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        networks:
+          minItems: 1
+          type: array
+          items:
+            type: string
+        iqns:
+          type: array
+          items:
+            type: string
+        currentOperationId:
+          type: string
+          format: uuid
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          $ref: '#/components/schemas/CCVVersion'
+      additionalProperties: false
+      example:
+        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+        name: Example CCV v3
+        type: File Scale Out
+        tier: elite
+        totalSizeInGB: 4096
+        factionLocationId: DC15
+        networks:
+        - network1
+        - network2
+        iqns:
+        - igns1
+        - iqns2
+        version: V3
+        createdAt: '2020-01-30T08:30:00Z'
+    CCVVersion:
+      type: string
+      enum:
+      - V2
+      - V3
+    CCVMetricsType:
+      enum:
+      - Volume
+      - System
+      type: string
+    CCVVolumeMetrics:
+      type: object
+      properties:
+        readIO:
+          type: integer
+          format: int64
+        writeIO:
+          type: integer
+          format: int64
+        ioSize:
+          type: integer
+          format: int64
+        readThroughput:
+          type: integer
+          format: int64
+        writeThroughput:
+          type: integer
+          format: int64
+        responseTime:
+          type: integer
+          format: int64
+    CCVSystemMetrics:
+      type: object
+      properties:
+        readIO:
+          type: integer
+          format: int64
+        writeIO:
+          type: integer
+          format: int64
+        ioSize:
+          type: integer
+          format: int64
+        readThroughput:
+          type: integer
+          format: int64
+        writeThroughput:
+          type: integer
+          format: int64
+        responseTime:
+          type: integer
+          format: int64
+    CCVMetrics:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CCVMetricsType'
+        currentValue:
+          oneOf:
+          - $ref: '#/components/schemas/CCVVolumeMetrics'
+          - $ref: '#/components/schemas/CCVSystemMetrics'
+    ErrorUnauthorized:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 401
+        error: Provided authorization information is invalid
+        message: Unauthorized
+        detail: Valid authorization bearer token is required
+        path: /the/called/path-here
+    ErrorNotFound:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 404
+        error: Resource Not Found Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 500
+        error: Internal Server Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
     Organization:
       required:
       - name
@@ -2138,227 +2361,6 @@ components:
           type: boolean
       example:
         SPcallBackUri: https://auth.pingone.com/51441281-305c-4e91-acc0-233470671c49/rp/callback/openid_connect
-    ErrorDto:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 500
-        error: Internal Server Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorNotFound:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 404
-        error: Resource Not Found Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorUnauthorized:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 401
-        error: Provided authorization information is invalid
-        message: Unauthorized
-        detail: Valid authorization bearer token is required
-        path: /the/called/path-here
-    CCV:
-      required:
-      - identifier
-      - factionLocationId
-      - iqns
-      - name
-      - networks
-      type: object
-      properties:
-        identifier:
-          type: string
-          format: uuid
-          nullable: true
-        name:
-          type: string
-        type:
-          type: string
-        tier:
-          type: string
-        totalSizeInGB:
-          type: integer
-          format: int64
-          nullable: true
-        usedSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        iops:
-          minimum: 0
-          type: number
-          format: float
-        sloThroughput:
-          maximum: 9223372036854776000
-          minimum: 0
-          type: integer
-          format: int64
-        factionLocationId:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-        networks:
-          minItems: 1
-          type: array
-          items:
-            type: string
-        iqns:
-          type: array
-          items:
-            type: string
-        currentOperationId:
-          type: string
-          format: uuid
-          nullable: true
-        createdDate:
-          type: string
-          format: date-time
-          nullable: true
-        version:
-          $ref: '#/components/schemas/CCVVersion'
-      additionalProperties: false
-      example:
-        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-        name: Example CCV v3
-        type: File Scale Out
-        tier: elite
-        totalSizeInGB: 4096
-        factionLocationId: DC15
-        networks:
-        - network1
-        - network2
-        iqns:
-        - igns1
-        - iqns2
-        version: V3
-        createdAt: '2020-01-30T08:30:00Z'
-    CCVVersion:
-      type: string
-      enum:
-      - V2
-      - V3
-    CCVMetricsType:
-      enum:
-      - Volume
-      - System
-      type: string
-    CCVVolumeMetrics:
-      type: object
-      properties:
-        readIO:
-          type: integer
-          format: int64
-        writeIO:
-          type: integer
-          format: int64
-        ioSize:
-          type: integer
-          format: int64
-        readThroughput:
-          type: integer
-          format: int64
-        writeThroughput:
-          type: integer
-          format: int64
-        responseTime:
-          type: integer
-          format: int64
-    CCVSystemMetrics:
-      type: object
-      properties:
-        readIO:
-          type: integer
-          format: int64
-        writeIO:
-          type: integer
-          format: int64
-        ioSize:
-          type: integer
-          format: int64
-        readThroughput:
-          type: integer
-          format: int64
-        writeThroughput:
-          type: integer
-          format: int64
-        responseTime:
-          type: integer
-          format: int64
-    CCVMetrics:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/CCVMetricsType'
-        currentValue:
-          oneOf:
-          - $ref: '#/components/schemas/CCVVolumeMetrics'
-          - $ref: '#/components/schemas/CCVSystemMetrics'
     FactionConnectionLocations:
       type: array
       minItems: 1
@@ -2367,6 +2369,33 @@ components:
       example:
       - DC15
     CreateFixConnection:
+      description: '## Current supported connection types:
+
+        | connection | connection_type | connection_subtype |
+
+        | :----------------- | :------- | :---------------- |
+
+        | AWS Direct Connect | cloud | aws_direct_connect |
+
+        | Azure ExpressRoute | cloud | azure_express_route |
+
+        | GCP Partner Interconnect | cloud | gcp_partner_interconnect |
+
+        | OCI Fast Connect | cloud | oci_fast_connect |
+
+        | Facility Backbone | private | facility_backbone |
+
+        | SDN Provider | private | sdn_provider |
+
+        | Intrafacility | private | intrafacility |
+
+        | Telco Circuit | private | traditional_circuit |
+
+        | Internet | internet | |
+
+        | InterRegion | interRegion | |
+
+        '
       required:
       - connectionType
       - connectionData
@@ -2398,8 +2427,7 @@ components:
           minimum: 0
           type: number
         crossCloud:
-          description: Enable or disable transitive (cross-cloud) routing.
-          type: boolean
+          $ref: '#/components/schemas/crossCloudEnabled'
       example:
         bandwidth: 3
         crossCloud: true
@@ -2424,6 +2452,36 @@ components:
         requestedChanges:
           type: object
     CloudConnection:
+      description: '## A connection to a customer-subscribed cloud service provider.
+
+        ---
+
+        ### Current supported connections:
+
+        - AWS Direct Connect (aws_direct_connect)
+
+        - Azure ExpressRoute
+
+        - Google Cloud Partner Interconnect
+
+        - Oracle Cloud Fast Connect
+
+
+        | connection_type | connection_subtype |
+
+        |--|------|
+
+        | cloud | aws_direct_connect |
+
+        | cloud | azure_express_route |
+
+        | cloud | gcp_partner_interconnect |
+
+        | cloud | oci_fast_connect |
+
+        ---
+
+        '
       type: object
       properties:
         schema:
@@ -2442,16 +2500,19 @@ components:
       type: object
       properties:
         bandwidth:
-          description: The expected connection in Gbps
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
+          type: integer
           maximum: 1024
-          minimum: 0
-          type: number
+          minimum: 1
+          example: 1
         bandwidthUnits:
           $ref: '#/components/schemas/BandwidthUnits'
         connectionSubType:
           type: string
           enum:
-          - aws
+          - aws_direct_connect
+          example: aws_direct_connect
         factionLocations:
           type: array
           items:
@@ -2462,15 +2523,19 @@ components:
         providerRegion:
           type: string
           nullable: false
+          example: us-east-1
         accountId:
           maxLength: 128
           minLength: 0
           type: string
           nullable: true
+          example: 1111-1111-1111
         vifIds:
           type: array
           items:
             type: string
+          example:
+          - dxvif-ac12b4c5
         crossCloud:
           type: boolean
       additionalProperties: false
@@ -2483,19 +2548,22 @@ components:
       type: object
       properties:
         bandwidth:
-          description: The expected connection in Gbps
-          type: number
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
+          type: integer
           enum:
           - 1
           - 2
           - 5
           - 10
+          example: 5
         bandwidthUnits:
           $ref: '#/components/schemas/BandwidthUnits'
         connectionSubType:
           type: string
           enum:
-          - azure
+          - azure_express_route_circuit
+          example: azure_express_route_circuit
         factionLocations:
           type: array
           items:
@@ -2506,6 +2574,7 @@ components:
         providerRegion:
           type: string
           nullable: false
+          example: eastus
         crossCloud:
           type: boolean
       additionalProperties: false
@@ -2519,8 +2588,9 @@ components:
       type: object
       properties:
         bandwidth:
-          description: The expected connection in Gbps
-          type: number
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
+          type: integer
           enum:
           - 1
           - 2
@@ -2528,12 +2598,14 @@ components:
           - 10
           - 20
           - 40
+          example: 5
         bandwidthUnits:
           $ref: '#/components/schemas/BandwidthUnits'
         connectionSubType:
           type: string
           enum:
-          - gcp
+          - gcp_partner_interconnect
+          example: gcp_partner_interconnect
         factionLocations:
           type: array
           items:
@@ -2543,9 +2615,18 @@ components:
           - DC15
         pairingKey:
           type: string
+          format: uuid
+          example: a4eb67f4-a8fa-4ef2-ab6e-ccf03912a756
+          description: 'Unique identifier to identify VLAN attachments for use with
+            Partner Interconnect
+
+            <br>[Cloud Interconnect terms - Pairing Key](https://cloud.google.com/network-connectivity/docs/interconnect/concepts/terminology#pairingkey)
+
+            '
         providerRegion:
           type: string
           nullable: false
+          example: us-east1
         crossCloud:
           type: boolean
       additionalProperties: false
@@ -2560,8 +2641,9 @@ components:
       type: object
       properties:
         bandwidth:
-          description: The expected connection in Gbps
-          type: number
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
+          type: integer
           enum:
           - 1
           - 2
@@ -2570,12 +2652,14 @@ components:
           - 10
           - 20
           - 40
+          example: 2
         bandwidthUnits:
           $ref: '#/components/schemas/BandwidthUnits'
         connectionSubType:
           type: string
           enum:
-          - oci
+          - oci_fast_connect
+          default: oci_fast_connect
         factionLocations:
           type: array
           items:
@@ -2588,11 +2672,31 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+          format: ocid
+          description: 'Oracle OCID for signing API requests.
+
+            <br>*Format:*` ocid1.tenancy.oc1..<unique_ID>`
+
+            <br>Ref: [Oracle Cloud Documentation](https://docs.oracle.com/en-us/iaas/Content/General/Concepts/identifiers.htm#Oracle)
+
+            '
         localPeeringGateway:
           type: string
+          format: ocid
+          description: 'Oracle OCID for Local Peering Gateway
+
+            <br>Ref: [Oracle Cloud Documentation](https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/LocalPeeringGateway/)
+
+            '
         providerRegion:
           type: string
           nullable: false
+          example: us-ashburn-1
+          description: 'Oracle region identifier
+
+            <br>Ref: [Oracle - Region and Availability Domains](https://docs.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm)
+
+            '
         crossCloud:
           type: boolean
       additionalProperties: false
@@ -2613,6 +2717,8 @@ components:
       type: object
       properties:
         bandwidth:
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
           type: integer
           enum:
           - 1
@@ -2621,6 +2727,7 @@ components:
           - 10
           - 20
           - 40
+          example: 10
         bandwidthUnits:
           $ref: '#/components/schemas/BandwidthUnits'
         connectionSubType:
@@ -2642,6 +2749,8 @@ components:
       type: object
       properties:
         bandwidth:
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
           type: integer
           enum:
           - 1
@@ -2668,6 +2777,8 @@ components:
       type: object
       properties:
         bandwidth:
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
           type: integer
           enum:
           - 1
@@ -2696,6 +2807,8 @@ components:
       type: object
       properties:
         bandwidth:
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
           type: integer
           enum:
           - 1
@@ -2721,10 +2834,11 @@ components:
       type: object
       properties:
         bandwidth:
-          description: The expected connection in Gbps
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
+          type: integer
           maximum: 100
           minimum: 1
-          type: number
         factionLocations:
           type: array
           items:
@@ -2751,10 +2865,11 @@ components:
           - DC15
           - CHI1
         bandwidth:
-          description: Throughput capacity of the connection
+          description: The connection throughput capacity. Units are defined in the
+            bandwidthUnits property.
+          type: integer
           maximum: 1024
           minimum: 1
-          type: number
         bandwidthUnits:
           $ref: '#/components/schemas/BandwidthUnits'
     BandwidthUnits:
@@ -2762,6 +2877,8 @@ components:
       enum:
       - gbps
       - mbps
+      example: gbps
+      default: gbps
     FixConnectionState:
       type: string
       enum:
@@ -2775,18 +2892,23 @@ components:
       - internet
       - interRegion
       - private
+      example: cloud
     Active:
       type: boolean
       default: false
+    crossCloudEnabled:
+      description: Enable or disable outbound transitive (cross-cloud) routing.
+      type: boolean
+      default: false
   securitySchemes:
-    defaultAuthorizer:
-      description: Default custom authorizer
-      type: apiKey
-      name: Authorization
-      in: header
     orgContextAuthorizer:
       description: Custom Authorizer that will validate X-Organization-Id header within
         organization context
+      type: apiKey
+      name: Authorization
+      in: header
+    defaultAuthorizer:
+      description: Default custom authorizer
       type: apiKey
       name: Authorization
       in: header
