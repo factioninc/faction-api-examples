@@ -19,8 +19,9 @@ info:
     \n| Version | Namespace     | Description                                    \
     \              |\n| ------- | ------------- | ------------------------------------------------------------\
     \ |\n| v1      | organizations | Provides information about organizations.   \
-    \                 |\n| v2      | fix           | Provides information about fix\
-    \ (Faction Internetwork eXchange) connections |\n"
+    \                 |\n| v1      | ccv           | Provides information about ccv\
+    \ (Cloud Control Volumes) |\n| v2      | fix            | Provides information\
+    \ about fix (Faction Internetwork eXchange) connections |\n"
   version: v1 and v2
 servers:
 - url: https://api.factioninc.com
@@ -43,18 +44,68 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Organization'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+      security:
+      - defaultAuthorizer: []
   /v1/organizations/{organizationId}:
     get:
       description: Returns the information on a single organization, based on the
@@ -80,24 +131,90 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Organization'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+      security:
+      - orgContextAuthorizer: []
   /v1/organizations/{organizationId}/roles:
     get:
       tags:
@@ -127,18 +244,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Roles'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/organizations/{organizationId}/sso:
     get:
       description: Returns a SSO object
@@ -168,24 +333,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SSOGet'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
     post:
       description: Gets Service Provider (SP) callback url based upon client ID, secrets,
         discovery URI and claim attributes.
@@ -220,24 +449,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SPCallBack'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
     put:
       description: Updates Service Provider SSO Object.
       summary: Updates Service Provider SSO Object.
@@ -271,24 +564,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SSO'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
     delete:
       description: Deletes the customer's IDP association with Factions Service Provider.
       summary: Deletes the customer's IDP association with Factions Service Provider.
@@ -317,24 +674,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SSODeleted'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/organizations/{organizationId}/sso/groups:
     get:
       description: Returns a list of groups with their associated mapping of customer
@@ -367,24 +788,88 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Groups'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
     post:
       description: Maps customer group to Faction IDP roles and returns the groupId
         with its associated Faction roles.
@@ -419,24 +904,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Groups'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/organizations/{organizationId}/sso/groups/{groupId}:
     delete:
       description: Deletes the customer's group association with Faction's IDP.
@@ -473,24 +1022,88 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GroupDeleted'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
     put:
       description: Modify a customer's role and/or group name associated with it's
         Group ID
@@ -532,24 +1145,401 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Groups'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes:
+    get:
+      summary: Get all CCVs
+      description: Returns a list of the CCV volumes provisioned for an organization
+        based on the Organization Identifier.
+      operationId: ccvVolumeGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CCV'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}:
+    get:
+      summary: Get CCV by ID
+      description: Returns the information regarding a particular CCV based on the
+        Organization Identifier and the Service Identifier.
+      operationId: ccvVolumeIdGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCV'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}/metrics:
+    get:
+      summary: Get CCV metrics
+      description: Gets the metrics for the CCV with the provided ccvId.
+      operationId: ccvVolumeMetricsGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - name: metricsType
+        in: query
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CCVMetricsType'
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCVMetrics'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v2/fix/connections:
     post:
       description: Create a new FIX Connection.
@@ -995,90 +1985,6 @@ components:
         nullable: false
       required: true
   schemas:
-    ErrorDto:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 500
-        error: Internal Server Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorNotFound:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 404
-        error: Resource Not Found Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorUnauthorized:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 401
-        error: Provided authorization information is invalid
-        message: Unauthorized
-        detail: Valid authorization bearer token is required
-        path: /the/called/path-here
     Organization:
       required:
       - name
@@ -1232,6 +2138,227 @@ components:
           type: boolean
       example:
         SPcallBackUri: https://auth.pingone.com/51441281-305c-4e91-acc0-233470671c49/rp/callback/openid_connect
+    ErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 500
+        error: Internal Server Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorNotFound:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 404
+        error: Resource Not Found Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorUnauthorized:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 401
+        error: Provided authorization information is invalid
+        message: Unauthorized
+        detail: Valid authorization bearer token is required
+        path: /the/called/path-here
+    CCV:
+      required:
+      - identifier
+      - factionLocationId
+      - iqns
+      - name
+      - networks
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        type:
+          type: string
+        tier:
+          type: string
+        totalSizeInGB:
+          type: integer
+          format: int64
+          nullable: true
+        usedSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        iops:
+          minimum: 0
+          type: number
+          format: float
+        sloThroughput:
+          maximum: 9223372036854776000
+          minimum: 0
+          type: integer
+          format: int64
+        factionLocationId:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        networks:
+          minItems: 1
+          type: array
+          items:
+            type: string
+        iqns:
+          type: array
+          items:
+            type: string
+        currentOperationId:
+          type: string
+          format: uuid
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          $ref: '#/components/schemas/CCVVersion'
+      additionalProperties: false
+      example:
+        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+        name: Example CCV v3
+        type: File Scale Out
+        tier: elite
+        totalSizeInGB: 4096
+        factionLocationId: DC15
+        networks:
+        - network1
+        - network2
+        iqns:
+        - igns1
+        - iqns2
+        version: V3
+        createdAt: '2020-01-30T08:30:00Z'
+    CCVVersion:
+      type: string
+      enum:
+      - V2
+      - V3
+    CCVMetricsType:
+      enum:
+      - Volume
+      - System
+      type: string
+    CCVVolumeMetrics:
+      type: object
+      properties:
+        readIO:
+          type: integer
+          format: int64
+        writeIO:
+          type: integer
+          format: int64
+        ioSize:
+          type: integer
+          format: int64
+        readThroughput:
+          type: integer
+          format: int64
+        writeThroughput:
+          type: integer
+          format: int64
+        responseTime:
+          type: integer
+          format: int64
+    CCVSystemMetrics:
+      type: object
+      properties:
+        readIO:
+          type: integer
+          format: int64
+        writeIO:
+          type: integer
+          format: int64
+        ioSize:
+          type: integer
+          format: int64
+        readThroughput:
+          type: integer
+          format: int64
+        writeThroughput:
+          type: integer
+          format: int64
+        responseTime:
+          type: integer
+          format: int64
+    CCVMetrics:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CCVMetricsType'
+        currentValue:
+          oneOf:
+          - $ref: '#/components/schemas/CCVVolumeMetrics'
+          - $ref: '#/components/schemas/CCVSystemMetrics'
     FactionConnectionLocations:
       type: array
       minItems: 1
@@ -1651,3 +2778,22 @@ components:
     Active:
       type: boolean
       default: false
+  securitySchemes:
+    defaultAuthorizer:
+      description: Default custom authorizer
+      type: apiKey
+      name: Authorization
+      in: header
+    orgContextAuthorizer:
+      description: Custom Authorizer that will validate X-Organization-Id header within
+        organization context
+      type: apiKey
+      name: Authorization
+      in: header
+    userManagementAuthorizer:
+      description: Default custom authorizer
+      type: apiKey
+      name: Authorization
+      in: header
+security:
+- orgContextAuthorizer: []
