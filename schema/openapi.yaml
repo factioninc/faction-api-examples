@@ -29,8 +29,9 @@ paths:
   /v1/ccv/volumes:
     get:
       summary: Get all CCVs
-      description: Returns a list of the CCV volumes provisioned for an organization
-        based on the Organization Identifier.
+      description: "Returns a list of every Cloud Control Volume (CCV) provisioned\
+        \ for an organization based on the Organization Identifier \nprovided in the\
+        \ X-Organization-Id header.\n"
       operationId: ccvVolumeGet
       tags:
       - CCVs
@@ -51,6 +52,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CCV'
+              example:
+              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -114,8 +133,9 @@ paths:
   /v1/ccv/volumes/{ccvId}:
     get:
       summary: Get CCV by ID
-      description: Returns the information regarding a particular CCV based on the
-        Organization Identifier and the Service Identifier.
+      description: "Returns the information regarding a particular Cloud Control Volume\
+        \ (CCV) \nbased on the Organization Identifier provided in the X-Organization-Id\
+        \ header.\n"
       operationId: ccvVolumeIdGet
       tags:
       - CCVs
@@ -140,6 +160,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CCV'
+              example:
+                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -225,8 +263,14 @@ paths:
   /v1/ccv/volumes/{ccvId}/metrics:
     get:
       summary: Get CCV metrics
-      description: Gets the metrics for the CCV with the provided ccvId.
-      operationId: ccvVolumeMetricsGet
+      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
+        ccvId.
+
+        Metrics include the CCV status, total capacity in bytes, and used capacity
+        in bytes.
+
+        '
+      operationId: ccvMetricsGet
       tags:
       - CCVs
       parameters:
@@ -243,13 +287,6 @@ paths:
           type: string
           format: uuid
         required: true
-      - name: metricsType
-        in: query
-        schema:
-          type: array
-          items:
-            $ref: '#/components/schemas/CCVMetricsType'
-        required: false
       responses:
         '200':
           description: Success
@@ -257,6 +294,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CCVMetrics'
+              example:
+                health: healthy
+                capacity:
+                  total: 10
+                  used: 1
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -341,10 +383,10 @@ paths:
                 type: string
   /v1/organizations:
     get:
+      summary: Get list of organizations
       description: Provides a list of organizations.  This could be a list of all
         organizations, the current organization, or a list of assigned organizations
         (for OEMs) based on the user access level.
-      summary: Gets list of organizations.
       operationId: organizationsGet
       tags:
       - Organizations
@@ -357,6 +399,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Organization'
+              example:
+              - identifier: 23f8bfa4-3737-44b6-a74e-0603a01fc25a
+                name: ACME Corporation
+                orgCode: ACME
+                pingPopulationId: 1d0aa3fc-1d1f-4ea2-a21f-18ffea350df2
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -421,10 +468,9 @@ paths:
       - defaultAuthorizer: []
   /v1/organizations/{organizationId}:
     get:
+      summary: Get organization
       description: Returns the information on a single organization, based on the
         Organization Identifier provided.
-      summary: Returns the information on a single organization, based on the Organization
-        Identifier provided.
       operationId: organizationIdGet
       tags:
       - Organizations
@@ -444,6 +490,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Organization'
+              example:
+                identifier: 23f8bfa4-3737-44b6-a74e-0603a01fc25a
+                name: ACME Corporation
+                orgCode: ACME
+                pingPopulationId: 1d0aa3fc-1d1f-4ea2-a21f-18ffea350df2
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -533,7 +584,13 @@ paths:
       tags:
       - Organizations
       summary: Get organization's roles
-      description: Get organization's roles
+      description: "Gets the roles available to the organization. Roles are assigned\
+        \ to users to control their permissions.\nThere are two categories of roles:\
+        \ Portal roles and VPN roles.\n\nPortal roles control the actions available\
+        \ in the Faction portal.\nThe possible portal roles are:\n  - <b>User:</b>\
+        \ Enables read access\n  - <b>Technician:</b> Enables write access \n  - <b>Org_Admin:</b>\
+        \ Enables user management\n  - <b>Group_Admin:</b> Enables multiple organization\
+        \ management \n\nVPN roles determine which VPNs a user can access. \n"
       operationId: organizationRolesGet
       parameters:
       - name: organizationId
@@ -557,6 +614,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Roles'
+              example:
+                portalRoles:
+                - User
+                - Technician
+                - Org_Admin
+                - Group_Admin
+                vpnRoles:
+                - vpn_dc15_e01
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -619,8 +684,8 @@ paths:
                 type: string
   /v1/organizations/{organizationId}/sso:
     get:
-      description: Returns a SSO object
-      summary: Returns a SSO object
+      summary: Get SSO configuration
+      description: Gets an organization's Single Sign-On (SSO) configuration.
       operationId: ssoGet
       tags:
       - Organizations
@@ -646,6 +711,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SSOGet'
+              example:
+                clientId: xddr5-678
+                clientSecret: mysecret
+                discoveryUri: https://example.com/discovery
+                email: providerAttributes.email
+                externalAuthorization: externalAuthorization
+                userName: providerAttributes.sub
+                callbackUrl: https://auth.factiondev.com/rp/callback/openid_connect
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -729,9 +802,21 @@ paths:
               schema:
                 type: string
     post:
-      description: Gets Service Provider (SP) callback url based upon client ID, secrets,
-        discovery URI and claim attributes.
-      summary: Gets service provider information.
+      summary: Enable Single Sign-On (SSO)
+      description: "Enables Single Sign-On (SSO) through an OpenID Connect (OIDC)\
+        \ identity provider.\nThe request body should contain the information necessary\
+        \ to configure the OIDC identity provider. \nThe configuration includes mapping\
+        \ the attributes provided by your OIDC application \nto userName and email\
+        \ attributes used by the Faction portal. \n- <b>clientId:</b> The client ID\
+        \ of your OIDC application \n- <b>discoveryUri:</b> Your OIDC application's\
+        \ discovery URI\n- <b>clientSecret:</b> The client secret of your OIDC application\n\
+        - <b>userName:</b> Attribute from your OIDC application which will be used\
+        \ as Faction portal username\n- <b>email:</b> Attribute from your OIDC application\
+        \ which will be used as Faction portal email\n- <b>externalAuthorization:</b>\
+        \ Attribute from your OIDC application which will be used to\n  determine\
+        \ users' Faction portal group membership\n- <b>mfaAttest:</b> By providing\
+        \ a value of \"true\", you attest that the identity provider \n  configured\
+        \ in this request requires multi-factor authentication (MFA).\n"
       operationId: ssoPost
       tags:
       - Organizations
@@ -762,6 +847,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SPCallBack'
+              example:
+                clientId: xddr5-678
+                clientSecret: mysecret
+                discoveryUri: https://example.com/discovery
+                userName: providerAttributes.sub
+                email: providerAttributes.email
+                externalAuthorization: externalAuthorization
+                mfaAttest: true
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -847,8 +940,10 @@ paths:
       security:
       - userManagementAuthorizer: []
     put:
-      description: Updates Service Provider SSO Object.
-      summary: Updates Service Provider SSO Object.
+      summary: Update Single Sign-On (SSO) configuration
+      description: "Updates Single Sign-On (SSO) configuration for and organization.\
+        \ \nSee `POST /{organizationId}/sso` for a description of the values \nin\
+        \ the request body.\n"
       operationId: ssoPut
       tags:
       - Organizations
@@ -879,6 +974,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SSO'
+              example:
+                clientId: xddr5-678
+                clientSecret: mysecret
+                discoveryUri: https://example.com/discovery
+                userName: providerAttributes.sub
+                email: providerAttributes.email
+                externalAuthorization: externalAuthorization
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -962,8 +1064,10 @@ paths:
               schema:
                 type: string
     delete:
-      description: Deletes the customer's IDP association with Factions Service Provider.
-      summary: Deletes the customer's IDP association with Factions Service Provider.
+      summary: Disable Single Sign-On (SSO)
+      description: 'Disables Single Sign-On (SSO) for an organization.
+
+        '
       operationId: ssoDelete
       tags:
       - Organizations
@@ -989,6 +1093,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SSODeleted'
+              example:
+                ssoDeleted: true
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -1073,9 +1179,14 @@ paths:
                 type: string
   /v1/organizations/{organizationId}/sso/groups:
     get:
-      description: Returns a list of groups with their associated mapping of customer
-        groups to Faction SP roles (federation)
-      summary: Returns list of organization's SSO groups.
+      summary: Get list of organization's SSO groups
+      description: "Provides a list of the organization's SSO groups. \n\nSSO groups\
+        \ are used to \nautomatically assign users' roles based on their external\
+        \ authorizaitons.\nAny user with an external authorization which matches an\
+        \ SSO group's `groupName` \nwill be added to that group and assigned the roles\
+        \ associated with that group.\nExternal authorizations are provided by the\
+        \ organization's identity provider \nas configured by the `/{organizationId}/sso`\
+        \ endpoint.\n"
       operationId: ssoGroupsGet
       tags:
       - Organizations
@@ -1103,6 +1214,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Groups'
+              example:
+              - groupName: Portal_Users
+                identifier: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                roles:
+                - User
+                - Technician
+                - vpn_dc15_e01
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -1186,9 +1304,13 @@ paths:
               schema:
                 type: string
     post:
-      description: Maps customer group to Faction IDP roles and returns the groupId
-        with its associated Faction roles.
-      summary: Create SSO group.
+      summary: Create SSO group
+      description: "Creates an SSO group. \n\nSSO groups are used to \nautomatically\
+        \ assign users' roles based on their external authorizaitons.\nAny user with\
+        \ an external authorization which matches an SSO group's `groupName` \nwill\
+        \ be added to that group and assigned the roles associated with that group.\n\
+        External authorizations are provided by the organization's identity provider\
+        \ \nas configured by the `/{organizationId}/sso` endpoint.\n"
       operationId: ssoGroupsPost
       tags:
       - Organizations
@@ -1219,6 +1341,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Groups'
+              example:
+                identifier: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                groupName: Portal_Users
+                roles:
+                - User
+                - Technician
+                - vpn_dc15_e01
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -1303,8 +1432,8 @@ paths:
                 type: string
   /v1/organizations/{organizationId}/sso/groups/{groupId}:
     delete:
-      description: Deletes the customer's group association with Faction's IDP.
-      summary: Delete SSO group.
+      summary: Delete SSO group
+      description: Deletes the SSO group with ID `groupId`.
       operationId: ssoGroupIdDelete
       tags:
       - Organizations
@@ -1337,6 +1466,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GroupDeleted'
+              example:
+                groupDeleted: true
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -1420,9 +1551,13 @@ paths:
               schema:
                 type: string
     put:
-      description: Modify a customer's role and/or group name associated with it's
-        Group ID
-      summary: Update SSO group.
+      summary: Update SSO group
+      description: "Updates the SSO group with ID `groupId`.\n\nSSO groups are used\
+        \ to \nautomatically assign users' roles based on their external authorizaitons.\n\
+        Any user with an external authorization which matches an SSO group's `groupName`\
+        \ \nwill be added to that group and assigned the roles associated with that\
+        \ group.\nExternal authorizations are provided by the organization's identity\
+        \ provider \nas configured by the `/{organizationId}/sso` endpoint.\n"
       operationId: ssoGroupIdPut
       tags:
       - Organizations
@@ -1460,6 +1595,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Groups'
+              example:
+                groupName: Portal_Users
+                identifier: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                roles:
+                - User
+                - Technician
+                - vpn_dc15_e01
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -2006,7 +2148,7 @@ components:
           type: string
         tier:
           type: string
-        totalSizeInGB:
+        totalSizeInBytes:
           type: integer
           format: int64
           nullable: true
@@ -2053,7 +2195,10 @@ components:
         name: Example CCV v3
         type: File Scale Out
         tier: elite
-        totalSizeInGB: 4096
+        totalSizeInBytes: 4096
+        usedSizeInBytes: 1024
+        iops: 0
+        sloThroughput: 25
         factionLocationId: DC15
         networks:
         - network1
@@ -2068,62 +2213,25 @@ components:
       enum:
       - V2
       - V3
-    CCVMetricsType:
-      enum:
-      - Volume
-      - System
-      type: string
-    CCVVolumeMetrics:
-      type: object
-      properties:
-        readIO:
-          type: integer
-          format: int64
-        writeIO:
-          type: integer
-          format: int64
-        ioSize:
-          type: integer
-          format: int64
-        readThroughput:
-          type: integer
-          format: int64
-        writeThroughput:
-          type: integer
-          format: int64
-        responseTime:
-          type: integer
-          format: int64
-    CCVSystemMetrics:
-      type: object
-      properties:
-        readIO:
-          type: integer
-          format: int64
-        writeIO:
-          type: integer
-          format: int64
-        ioSize:
-          type: integer
-          format: int64
-        readThroughput:
-          type: integer
-          format: int64
-        writeThroughput:
-          type: integer
-          format: int64
-        responseTime:
-          type: integer
-          format: int64
     CCVMetrics:
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/CCVMetricsType'
-        currentValue:
-          oneOf:
-          - $ref: '#/components/schemas/CCVVolumeMetrics'
-          - $ref: '#/components/schemas/CCVSystemMetrics'
+        health:
+          $ref: '#/components/schemas/CCVHealthStatus'
+        capacity:
+          type: object
+          properties:
+            total:
+              type: number
+              example: 10
+            used:
+              type: number
+              example: 1
+    CCVHealthStatus:
+      type: string
+      enum:
+      - healthy
+      - unhealthy
     ErrorUnauthorized:
       type: object
       properties:
