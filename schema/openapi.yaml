@@ -26,367 +26,6 @@ info:
 servers:
 - url: https://api.factioninc.com
 paths:
-  /v1/ccv/volumes:
-    get:
-      summary: Get all CCVs
-      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
-        for an organization based on the Organization Identifier
-
-        provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CCV'
-              example:
-              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}:
-    get:
-      summary: Get CCV by ID
-      description: 'Returns the information regarding a particular Cloud Control Volume
-        (CCV)
-
-        based on the Organization Identifier provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeIdGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCV'
-              example:
-                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}/metrics:
-    get:
-      summary: Get CCV metrics
-      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
-        ccvId.
-
-        Metrics include the CCV status, total capacity in bytes, and used capacity
-        in bytes.
-
-        '
-      operationId: ccvMetricsGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCVMetrics'
-              example:
-                health: healthy
-                capacity:
-                  total: 10
-                  used: 1
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v1/organizations:
     get:
       summary: Get list of organizations
@@ -1690,6 +1329,367 @@ paths:
               explode: false
               schema:
                 type: string
+  /v1/ccv/volumes:
+    get:
+      summary: Get all CCVs
+      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
+        for an organization based on the Organization Identifier
+
+        provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CCV'
+              example:
+              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}:
+    get:
+      summary: Get CCV by ID
+      description: 'Returns the information regarding a particular Cloud Control Volume
+        (CCV)
+
+        based on the Organization Identifier provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeIdGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCV'
+              example:
+                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}/metrics:
+    get:
+      summary: Get CCV metrics
+      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
+        ccvId.
+
+        Metrics include the CCV status, total capacity in bytes, and used capacity
+        in bytes.
+
+        '
+      operationId: ccvMetricsGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCVMetrics'
+              example:
+                health: healthy
+                capacity:
+                  total: 10
+                  used: 1
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v2/fix/connections:
     post:
       description: Create a new FIX Connection.
@@ -2147,193 +2147,6 @@ components:
         nullable: false
       required: true
   schemas:
-    CCV:
-      required:
-      - identifier
-      - factionLocationId
-      - iqns
-      - name
-      - networks
-      type: object
-      properties:
-        identifier:
-          type: string
-          format: uuid
-          nullable: true
-        name:
-          type: string
-        type:
-          type: string
-        tier:
-          type: string
-        totalSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        usedSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        iops:
-          minimum: 0
-          type: number
-          format: float
-        sloThroughput:
-          maximum: 9223372036854776000
-          minimum: 0
-          type: integer
-          format: int64
-        factionLocationId:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-        networks:
-          minItems: 1
-          type: array
-          items:
-            type: string
-        iqns:
-          type: array
-          items:
-            type: string
-        currentOperationId:
-          type: string
-          format: uuid
-          nullable: true
-        createdDate:
-          type: string
-          format: date-time
-          nullable: true
-        version:
-          $ref: '#/components/schemas/CCVVersion'
-      additionalProperties: false
-      example:
-        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-        name: Example CCV v3
-        type: File Scale Out
-        tier: elite
-        totalSizeInBytes: 4096
-        usedSizeInBytes: 1024
-        iops: 0
-        sloThroughput: 25
-        factionLocationId: DC15
-        networks:
-        - network1
-        - network2
-        iqns:
-        - igns1
-        - iqns2
-        version: V3
-        createdAt: '2020-01-30T08:30:00Z'
-    CCVVersion:
-      type: string
-      enum:
-      - V2
-      - V3
-    CCVMetrics:
-      type: object
-      properties:
-        health:
-          $ref: '#/components/schemas/CCVHealthStatus'
-        capacity:
-          type: object
-          properties:
-            total:
-              type: number
-              example: 10
-            used:
-              type: number
-              example: 1
-    CCVHealthStatus:
-      type: string
-      enum:
-      - healthy
-      - unhealthy
-    ErrorDto:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 500
-        error: Internal Server Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorNotFound:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 404
-        error: Resource Not Found Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorUnauthorized:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 401
-        error: Provided authorization information is invalid
-        message: Unauthorized
-        detail: Valid authorization bearer token is required
-        path: /the/called/path-here
     Organization:
       required:
       - name
@@ -2487,6 +2300,193 @@ components:
           type: boolean
       example:
         SPcallBackUri: https://auth.pingone.com/51441281-305c-4e91-acc0-233470671c49/rp/callback/openid_connect
+    ErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 500
+        error: Internal Server Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorNotFound:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 404
+        error: Resource Not Found Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorUnauthorized:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 401
+        error: Provided authorization information is invalid
+        message: Unauthorized
+        detail: Valid authorization bearer token is required
+        path: /the/called/path-here
+    CCV:
+      required:
+      - identifier
+      - factionLocationId
+      - iqns
+      - name
+      - networks
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        type:
+          type: string
+        tier:
+          type: string
+        totalSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        usedSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        iops:
+          minimum: 0
+          type: number
+          format: float
+        sloThroughput:
+          maximum: 9223372036854776000
+          minimum: 0
+          type: integer
+          format: int64
+        factionLocationId:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        networks:
+          minItems: 1
+          type: array
+          items:
+            type: string
+        iqns:
+          type: array
+          items:
+            type: string
+        currentOperationId:
+          type: string
+          format: uuid
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          $ref: '#/components/schemas/CCVVersion'
+      additionalProperties: false
+      example:
+        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+        name: Example CCV v3
+        type: File Scale Out
+        tier: elite
+        totalSizeInBytes: 4096
+        usedSizeInBytes: 1024
+        iops: 0
+        sloThroughput: 25
+        factionLocationId: DC15
+        networks:
+        - network1
+        - network2
+        iqns:
+        - igns1
+        - iqns2
+        version: V3
+        createdAt: '2020-01-30T08:30:00Z'
+    CCVVersion:
+      type: string
+      enum:
+      - V2
+      - V3
+    CCVMetrics:
+      type: object
+      properties:
+        health:
+          $ref: '#/components/schemas/CCVHealthStatus'
+        capacity:
+          type: object
+          properties:
+            total:
+              type: number
+              example: 10
+            used:
+              type: number
+              example: 1
+    CCVHealthStatus:
+      type: string
+      enum:
+      - healthy
+      - unhealthy
     FactionConnectionLocations:
       type: array
       minItems: 1
@@ -3055,14 +3055,14 @@ components:
         detail: Valid request is required
         path: /the/called/path-here
   securitySchemes:
-    orgContextAuthorizer:
-      description: Custom Authorizer that will validate X-Organization-Id header within
-        organization context
+    defaultAuthorizer:
+      description: Default custom authorizer
       type: apiKey
       name: Authorization
       in: header
-    defaultAuthorizer:
-      description: Default custom authorizer
+    orgContextAuthorizer:
+      description: Custom Authorizer that will validate X-Organization-Id header within
+        organization context
       type: apiKey
       name: Authorization
       in: header
