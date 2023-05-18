@@ -1327,6 +1327,1148 @@ paths:
               explode: false
               schema:
                 type: string
+  /v1/users:
+    get:
+      description: Gets the list of Users for given Organization.
+      summary: Gets the list of Users for given Organization.
+      operationId: usersGet
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    post:
+      description: Create User.
+      summary: Create User.
+      operationId: usersPost
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestBody'
+            examples:
+              UserExample:
+                value:
+                  username: robert_william
+                  email: robert_william@factioninc.com
+                  firstName: Robert
+                  lastName: William
+                  phone: '+1234567890'
+                  timezone: America/New_York
+                  roles:
+                  - Technician
+                  - User
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/users/{userId}:
+    patch:
+      description: Update user
+      summary: Update user
+      operationId: userPatch
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      - name: X-Password
+        in: header
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: userId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserRequestBody'
+            examples:
+              UserDataExample:
+                value:
+                  firstName: Robert
+                  lastName: William
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+              examples:
+                UserResponseExample:
+                  value:
+                    identifier: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    username: robert_william
+                    email: robert_william@factioninc.com
+                    firstName: Robert
+                    lastName: William
+                    phone: '+1234567890'
+                    timezone: America/New_York
+                    roles:
+                    - Technician
+                    - User
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    delete:
+      description: Delete user
+      summary: Delete user
+      operationId: userDelete
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      - name: userId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/users/{userId}/avatar:
+    post:
+      description: Upload User's avatar.
+      summary: Upload User's avatar.
+      operationId: userAvatarPost
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      - name: userId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAvatar'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/users/avatar:
+    post:
+      description: Upload User's avatar.
+      summary: Upload User's avatar.
+      operationId: avatarPost
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAvatar'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/users/{userId}/password:
+    put:
+      description: Update User password.
+      summary: Update User password.
+      operationId: passwordPut
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      - name: userId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserPasswordRequestBody'
+            examples:
+              PasswordExample:
+                value:
+                  newPassword: aA#45678
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPassword'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/users/{userId}/mfa:
+    get:
+      description: Status on whether mfa is enabled.
+      summary: Status on whether mfa is enabled.
+      operationId: userMfaGet
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      - name: userId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MFA'
+              examples:
+                example:
+                  value:
+                    email: null
+                    mfaEnabled: false
+                    confirmationCode: null
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    post:
+      description: Send user's email to receive confirmation code
+      summary: Send user's email to receive confirmation code
+      operationId: userMfaPost
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      - name: userId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MFA'
+            examples:
+              SendUserEmail:
+                value:
+                  email: robert_william@factioninc.com
+                  mfaEnabled: null
+                  confirmationCode: null
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MFA'
+              examples:
+                Example:
+                  value:
+                    email: robert_william@factioninc.com
+                    mfaEnabled: false
+                    confirmationCode: null
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    put:
+      description: Send user their confirmation code
+      summary: Send user their confirmation code
+      operationId: userMfaPut
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      - name: userId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MFA'
+            examples:
+              SendConfirmationCode:
+                value:
+                  email: robert_william@factioninc.com
+                  mfaEnabled: false
+                  confirmationCode: Aggv&62399
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MFA'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    delete:
+      description: Delete a user's mfa capability.
+      summary: Delete a user's mfa capability.
+      operationId: userMfaDelete
+      tags:
+      - Users
+      parameters:
+      - $ref: '#/components/parameters/X-Organization-Id'
+      - name: userId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/ccv/volumes:
     get:
       summary: Get all CCVs
@@ -2382,6 +3524,171 @@ components:
         message: Unauthorized
         detail: Valid authorization bearer token is required
         path: /the/called/path-here
+    User:
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        timezone:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+            - Master_Admin
+            - Group_Admin
+            - Org_Admin
+            - Technician
+            - User
+      example:
+        identifier: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        username: robert_william
+        email: robert_william@factioninc.com
+        firstName: Robert
+        lastName: William
+        phone: '+1234567890'
+        timezone: America/New_York
+        roles:
+        - Technician
+        - User
+    UserPassword:
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        userStatus:
+          type: string
+        password:
+          type: string
+      example:
+        identifier: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        password: aA#45678
+        userStatus: MUST_CHANGE_PASSWORD
+    UpdateUserPasswordRequestBody:
+      type: object
+      required:
+      - newPassword
+      properties:
+        newPassword:
+          type: string
+      additionalProperties: false
+      example:
+        newPassword: aA#45678
+    EditUserRequestBody:
+      type: object
+      required:
+      - firstName
+      - lastName
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+      additionalProperties: false
+      example:
+        firstName: John
+        lastName: Doe
+    CreateUserRequestBody:
+      type: object
+      required:
+      - username
+      - email
+      - roles
+      - firstName
+      - lastName
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+            - Master_Admin
+            - Group_Admin
+            - Org_Admin
+            - Technician
+            - User
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        timezone:
+          type: string
+      additionalProperties: false
+      example:
+        username: robert_william
+        email: robert_william@factioninc.com
+        firstName: Robert
+        lastName: William
+        phone: '+1234567890'
+        timezone: America/New_York
+        roles:
+        - Technician
+        - User
+    UserAvatar:
+      type: object
+      properties:
+        url:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        url: http://path_to_url.com
+    MFA:
+      type: object
+      properties:
+        email:
+          type: string
+        mfaEnabled:
+          type: boolean
+        confirmationCode:
+          type: string
+    ErrorBadRequest:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 400
+        error: Provided request is invalid
+        message: Bad Request
+        detail: Valid request is required
+        path: /the/called/path-here
     CCV:
       required:
       - identifier
@@ -3024,34 +4331,6 @@ components:
       description: Enable or disable outbound transitive (cross-cloud) routing.
       type: boolean
       default: false
-    ErrorBadRequest:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 400
-        error: Provided request is invalid
-        message: Bad Request
-        detail: Valid request is required
-        path: /the/called/path-here
   securitySchemes:
     defaultAuthorizer:
       description: Default custom authorizer
