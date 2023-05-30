@@ -4,6 +4,6 @@
      "baseBranches": [] 
   },
    "remediateSettings": {
-     "baseBranches": ["main"]
+     "baseBranches": []
    }
 }
