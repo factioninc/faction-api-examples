@@ -476,216 +476,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
-  /v1/dashboards:
-    get:
-      description: Returns a list of the dashboards with basic widgets configuration
-      summary: Returns a list of the dashboards with basic widgets configuration
-      tags:
-      - Dashboards
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - in: query
-        name: type
-        schema:
-          type: string
-          enum:
-          - global
-          - client
-        description: The type of dashboard to return either global or client specific.  It
-          is an optional parameter.  If no type is specified it defaults to client
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Dashboard'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Error unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/dashboards/{dashboardId}/widgets/{widgetId}:
-    get:
-      description: Returns full widget configuration with data
-      summary: Returns full widget configuration with data
-      tags:
-      - Dashboards
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: dashboardId
-        in: path
-        schema:
-          type: string
-          nullable: false
-        required: true
-      - name: widgetId
-        in: path
-        schema:
-          type: string
-          nullable: false
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                oneOf:
-                - $ref: '#/components/schemas/WidgetLine'
-                - $ref: '#/components/schemas/WidgetTable'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Error Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Error not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v1/organizations:
     get:
       summary: Get list of organizations
@@ -2349,367 +2139,6 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/ccv/volumes:
-    get:
-      summary: Get all CCVs
-      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
-        for an organization based on the Organization Identifier
-
-        provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CCV'
-              example:
-              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}:
-    get:
-      summary: Get CCV by ID
-      description: 'Returns the information regarding a particular Cloud Control Volume
-        (CCV)
-
-        based on the Organization Identifier provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeIdGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCV'
-              example:
-                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}/metrics:
-    get:
-      summary: Get CCV metrics
-      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
-        ccvId.
-
-        Metrics include the CCV status, total capacity in bytes, and used capacity
-        in bytes.
-
-        '
-      operationId: ccvMetricsGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCVMetrics'
-              example:
-                health: healthy
-                capacity:
-                  total: 10
-                  used: 1
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v1/tickets:
     get:
       summary: Get tickets
@@ -3602,6 +3031,216 @@ paths:
                 type: string
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/dashboards:
+    get:
+      description: Returns a list of the dashboards with basic widgets configuration
+      summary: Returns a list of the dashboards with basic widgets configuration
+      tags:
+      - Dashboards
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum:
+          - global
+          - client
+        description: The type of dashboard to return either global or client specific.  It
+          is an optional parameter.  If no type is specified it defaults to client
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dashboard'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Error unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/dashboards/{dashboardId}/widgets/{widgetId}:
+    get:
+      description: Returns full widget configuration with data
+      summary: Returns full widget configuration with data
+      tags:
+      - Dashboards
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: dashboardId
+        in: path
+        schema:
+          type: string
+          nullable: false
+        required: true
+      - name: widgetId
+        in: path
+        schema:
+          type: string
+          nullable: false
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                - $ref: '#/components/schemas/WidgetLine'
+                - $ref: '#/components/schemas/WidgetTable'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Error Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Error not found
           content:
             application/json:
               schema:
@@ -4797,6 +4436,367 @@ paths:
               explode: false
               schema:
                 type: string
+  /v1/ccv/volumes:
+    get:
+      summary: Get all CCVs
+      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
+        for an organization based on the Organization Identifier
+
+        provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CCV'
+              example:
+              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}:
+    get:
+      summary: Get CCV by ID
+      description: 'Returns the information regarding a particular Cloud Control Volume
+        (CCV)
+
+        based on the Organization Identifier provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeIdGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCV'
+              example:
+                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}/metrics:
+    get:
+      summary: Get CCV metrics
+      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
+        ccvId.
+
+        Metrics include the CCV status, total capacity in bytes, and used capacity
+        in bytes.
+
+        '
+      operationId: ccvMetricsGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCVMetrics'
+              example:
+                health: healthy
+                capacity:
+                  total: 10
+                  used: 1
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
 components:
   parameters:
     X-Organization-Id:
@@ -5507,127 +5507,6 @@ components:
         message: Unauthorized
         detail: Valid authorization bearer token is required
         path: /the/called/path-here
-    Dashboard:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        widgetsConfiguration:
-          type: array
-          items:
-            $ref: '#/components/schemas/WidgetConfiguration'
-          nullable: false
-      additionalProperties: false
-    WidgetConfiguration:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        type:
-          type: string
-          enum:
-          - cgraph
-          - table
-        col:
-          type: number
-          nullable: false
-        sizex:
-          type: number
-          nullable: false
-        row:
-          type: number
-          nullable: false
-        sizey:
-          type: number
-          nullable: false
-      additionalProperties: true
-    WidgetLine:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        verticalLabel:
-          type: string
-          nullable: false
-        startTime:
-          type: number
-          nullable: false
-        endTime:
-          type: number
-          nullable: false
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              visible:
-                type: boolean
-              legend:
-                type: string
-              data:
-                type: array
-                items:
-                  type: number
-              color:
-                type: string
-              label:
-                type: string
-              min:
-                type: number
-              max:
-                type: number
-              avg:
-                type: number
-        timestamps:
-          type: array
-          items:
-            type: number
-      additionalProperties: true
-    WidgetTable:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        pageSize:
-          type: string
-        columnHeaders:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              visible:
-                type: boolean
-              size:
-                type: number
-        rows:
-          type: array
-          items:
-            type: object
-            properties:
-              deviceId:
-                type: number
-              deviceDisplayName:
-                type: string
-              cells:
-                type: array
-                items:
-                  type: number
-      additionalProperties: true
     Organization:
       required:
       - name
@@ -5844,109 +5723,6 @@ components:
         roles:
         - User
         - Technician
-    CCV:
-      required:
-      - identifier
-      - factionLocationId
-      - iqns
-      - name
-      - networks
-      type: object
-      properties:
-        identifier:
-          type: string
-          format: uuid
-          nullable: true
-        name:
-          type: string
-        type:
-          type: string
-        tier:
-          type: string
-        totalSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        usedSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        iops:
-          minimum: 0
-          type: number
-          format: float
-        sloThroughput:
-          maximum: 9223372036854776000
-          minimum: 0
-          type: integer
-          format: int64
-        factionLocationId:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-        networks:
-          minItems: 1
-          type: array
-          items:
-            type: string
-        iqns:
-          type: array
-          items:
-            type: string
-        currentOperationId:
-          type: string
-          format: uuid
-          nullable: true
-        createdDate:
-          type: string
-          format: date-time
-          nullable: true
-        version:
-          $ref: '#/components/schemas/CCVVersion'
-      additionalProperties: false
-      example:
-        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-        name: Example CCV v3
-        type: File Scale Out
-        tier: elite
-        totalSizeInBytes: 4096
-        usedSizeInBytes: 1024
-        iops: 0
-        sloThroughput: 25
-        factionLocationId: DC15
-        networks:
-        - network1
-        - network2
-        iqns:
-        - igns1
-        - iqns2
-        version: V3
-        createdAt: '2020-01-30T08:30:00Z'
-    CCVVersion:
-      type: string
-      enum:
-      - V2
-      - V3
-    CCVMetrics:
-      type: object
-      properties:
-        health:
-          $ref: '#/components/schemas/CCVHealthStatus'
-        capacity:
-          type: object
-          properties:
-            total:
-              type: number
-              example: 10
-            used:
-              type: number
-              example: 1
-    CCVHealthStatus:
-      type: string
-      enum:
-      - healthy
-      - unhealthy
     CreateTicket:
       type: object
       required:
@@ -6084,6 +5860,127 @@ components:
       enum:
       - asc
       - desc
+    Dashboard:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        widgetsConfiguration:
+          type: array
+          items:
+            $ref: '#/components/schemas/WidgetConfiguration'
+          nullable: false
+      additionalProperties: false
+    WidgetConfiguration:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        type:
+          type: string
+          enum:
+          - cgraph
+          - table
+        col:
+          type: number
+          nullable: false
+        sizex:
+          type: number
+          nullable: false
+        row:
+          type: number
+          nullable: false
+        sizey:
+          type: number
+          nullable: false
+      additionalProperties: true
+    WidgetLine:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        verticalLabel:
+          type: string
+          nullable: false
+        startTime:
+          type: number
+          nullable: false
+        endTime:
+          type: number
+          nullable: false
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              visible:
+                type: boolean
+              legend:
+                type: string
+              data:
+                type: array
+                items:
+                  type: number
+              color:
+                type: string
+              label:
+                type: string
+              min:
+                type: number
+              max:
+                type: number
+              avg:
+                type: number
+        timestamps:
+          type: array
+          items:
+            type: number
+      additionalProperties: true
+    WidgetTable:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        pageSize:
+          type: string
+        columnHeaders:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              visible:
+                type: boolean
+              size:
+                type: number
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              deviceId:
+                type: number
+              deviceDisplayName:
+                type: string
+              cells:
+                type: array
+                items:
+                  type: number
+      additionalProperties: true
     User:
       type: object
       properties:
@@ -6259,6 +6156,109 @@ components:
       properties:
         email:
           type: string
+    CCV:
+      required:
+      - identifier
+      - factionLocationId
+      - iqns
+      - name
+      - networks
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        type:
+          type: string
+        tier:
+          type: string
+        totalSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        usedSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        iops:
+          minimum: 0
+          type: number
+          format: float
+        sloThroughput:
+          maximum: 9223372036854776000
+          minimum: 0
+          type: integer
+          format: int64
+        factionLocationId:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        networks:
+          minItems: 1
+          type: array
+          items:
+            type: string
+        iqns:
+          type: array
+          items:
+            type: string
+        currentOperationId:
+          type: string
+          format: uuid
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          $ref: '#/components/schemas/CCVVersion'
+      additionalProperties: false
+      example:
+        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+        name: Example CCV v3
+        type: File Scale Out
+        tier: elite
+        totalSizeInBytes: 4096
+        usedSizeInBytes: 1024
+        iops: 0
+        sloThroughput: 25
+        factionLocationId: DC15
+        networks:
+        - network1
+        - network2
+        iqns:
+        - igns1
+        - iqns2
+        version: V3
+        createdAt: '2020-01-30T08:30:00Z'
+    CCVVersion:
+      type: string
+      enum:
+      - V2
+      - V3
+    CCVMetrics:
+      type: object
+      properties:
+        health:
+          $ref: '#/components/schemas/CCVHealthStatus'
+        capacity:
+          type: object
+          properties:
+            total:
+              type: number
+              example: 10
+            used:
+              type: number
+              example: 1
+    CCVHealthStatus:
+      type: string
+      enum:
+      - healthy
+      - unhealthy
   securitySchemes:
     orgContextAuthorizer:
       description: Custom Authorizer that will validate X-Organization-Id header within
