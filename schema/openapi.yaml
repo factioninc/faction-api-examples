@@ -26,13 +26,18 @@ info:
 servers:
 - url: https://api.factioninc.com
 paths:
-  /v2/fix/connections:
-    post:
-      description: Create a new FIX Connection.
-      summary: Create a new FIX Connection.
-      operationId: create_connection
+  /v1/tickets:
+    get:
+      summary: Get tickets
+      description: "Gets the list of support tickets for the organization specified\
+        \ by the X-Organization-Id header. \nThe following query parameters are available\
+        \ for filtering the returned tickets:\n  - status\n  - number\n  - title\n\
+        \  - lastUpdatedFrom\n  - lastUpdatedTo\n  - openedAtFrom\n  - openedAtTo\n\
+        \nPagination is available by providing <b>offset</b> and <b>limit</b>\nquery\
+        \ parameters. Sorting is controlled by specifying <b>sortField</b> \nand <b>sortDirection</b>.\n"
+      operationId: ticketsGet
       tags:
-      - FIX Connections
+      - Tickets
       parameters:
       - name: X-Organization-Id
         in: header
@@ -41,139 +46,950 @@ paths:
           nullable: false
           format: uuid
         required: true
-      - name: locationCode
+      - name: offset
         in: query
+        description: The response offset for the pagination
+        schema:
+          type: number
+          nullable: false
+          format: number
+      - name: limit
+        in: query
+        description: The response limit for the pagination
+        schema:
+          type: number
+          nullable: false
+          format: number
+      - name: number
+        in: query
+        description: The ticket number to use as a filter.
+        schema:
+          type: number
+          nullable: false
+          format: number
+      - name: status
+        in: query
+        description: The list of statuses to use as a filter.
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketStatus'
+      - name: lastUpdatedFrom
+        in: query
+        description: The starting date to use as a filter.
         schema:
           type: string
-        required: false
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateFixConnection'
-            examples:
-              AwsExample:
-                value:
-                  connectionType: cloud
-                  connectionData:
-                    connectionSubType: aws_direct_connect
-                    providerRegion: us-east-1
-                    factionLocations:
-                    - DC15
-                    bandwidth: 12
-                    accountId: exampleinc
-                    crossCloud: true
-              AzureExample:
-                value:
-                  connectionType: cloud
-                  connectionData:
-                    connectionSubType: azure_express_route_circuit
-                    providerRegion: eastus
-                    factionLocations:
-                    - DC15
-                    bandwidth: 5
-              GoogleExample:
-                value:
-                  connectionType: cloud
-                  connectionData:
-                    connectionSubType: gcp_partner_interconnect
-                    providerRegion: eastus
-                    factionLocations:
-                    - DC15
-                    bandwidth: 2
-                    pairingKey: key1
-              OracleExample:
-                value:
-                  connectionType: cloud
-                  connectionData:
-                    connectionSubType: oci_fast_connect
-                    providerRegion: eastus
-                    factionLocations:
-                    - DC15
-                    bandwidth: 3
-                    tenancy: secret1
-                    localPeeringGateway: key1
-              InternetExample:
-                value:
-                  connectionType: internet
-                  connectionData:
-                    factionLocations:
-                    - DC15
-                    bandwidth: 14
-              InterRegionExample:
-                value:
-                  connectionType: interRegion
-                  connectionData:
-                    factionLocations:
-                    - DC15
-                    - CHI1
-                    bandwidth: 14
-              PrivateFacilityBackboneExample:
-                value:
-                  connectionType: private
-                  connectionData:
-                    connectionSubType: facility_backbone_connection
-                    factionLocations:
-                    - DC15
-                    bandwidth: 5
-              PrivateIntrafacilityExample:
-                value:
-                  connectionType: private
-                  connectionData:
-                    connectionSubType: intrafacility_cross_connect
-                    factionLocations:
-                    - DC15
-                    bandwidth: 10
-              PrivateSdnProviderExample:
-                value:
-                  connectionType: private
-                  connectionData:
-                    connectionSubType: sdn_provider_connection
-                    factionLocations:
-                    - DC15
-                    bandwidth: 1
-              PrivateTraditionalCircuitExample:
-                value:
-                  connectionType: private
-                  connectionData:
-                    connectionSubType: traditional_circuit
-                    factionLocations:
-                    - DC15
-                    bandwidth: 10
+          format: date-time
+      - name: lastUpdatedTo
+        in: query
+        description: The end date to use as a filter.
+        schema:
+          type: string
+          format: date-time
+      - name: openedAtFrom
+        in: query
+        description: The starting date to use as a filter.
+        schema:
+          type: string
+          format: date-time
+      - name: openedAtTo
+        in: query
+        description: The end date to use as a filter.
+        schema:
+          type: string
+          format: date-time
+      - name: title
+        in: query
+        description: The title to use as a filter.
+        schema:
+          type: string
+      - name: sortField
+        in: query
+        description: The field name to use for sort tickets.
+        schema:
+          $ref: '#/components/schemas/SortField'
+      - name: sortDirection
+        in: query
+        description: The sort direction
+        schema:
+          $ref: '#/components/schemas/SortDirection'
       responses:
-        '202':
-          description: Success
-          headers:
-            Location:
-              description: GET <url>/v1/fix/connections/{connectionId}/requests/{requestId}
-              content:
-                application/json:
-                  schema:
-                    $ref: '#/components/schemas/FixConnection'
-        '400':
-          description: Error Bad Request
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorBadRequest'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
-          description: Error Unauthorized
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
-    get:
-      description: Returns a list of the Fix Connections.
-      summary: Returns a list of the Fix Connections.
-      operationId: get_connections
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    post:
+      summary: Create ticket
+      description: "Creates a new support ticket for the given organization.\nProvide\
+        \ a title for the ticket along with a description of the requested support.\n\
+        Upon successful creation, a ticket will notify the Faction Inc. support team\
+        \ \nto provide assistance.\nThe request body has the following inputs:\n-\
+        \ title: The title of the new ticket.\n- description: A description of the\
+        \ requested support.\n"
+      operationId: ticketsPost
       tags:
-      - FIX Connections
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicket'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets/{ticketId}:
+    get:
+      summary: Get a single ticket
+      description: 'Gets the details of a single support ticket.
+
+        Specify the requested ticket by supplying the ticket''s <b>identifier</b>
+
+        as the <b>ticketId</b> field in the request path.
+
+        '
+      operationId: ticketGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets/{ticketId}/attachments:
+    get:
+      summary: Get ticket attachments
+      description: "Gets the metadata for each attachment on a support ticket.\nSpecify\
+        \ the requested ticket by supplying the ticket's <b>identifier</b> \nas the\
+        \ <b>ticketId</b> field in the request path. \nUse the `/{ticketId}/attachments/{attachmentId}`\
+        \ endpoint to get the attachment itself.\n"
+      operationId: ticketAttachmentsGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TicketAttachment'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    post:
+      summary: Add attachment to ticket
+      description: "Add a new attachment to a specific support ticket.\nThe request\
+        \ body Content-Type is `multipart/form-data` and contains the file to be attached.\n\
+        Attachments can be text, image, or video files.\nSupported attachment file\
+        \ types include:\n  - .txt\n  - .pdf\n  - .doc\n  - .docx\n  - .xls\n  - .xlsx\n\
+        \  - .png\n  - .jpg\n  - .jpeg\n  - .gif\n  - .svg\n  - .mp4\n  - .mov\n"
+      operationId: ticketAttachmentsPost
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateTicketAttachment'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketAttachment'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets/{ticketId}/attachments/{attachmentId}:
+    get:
+      summary: Get ticket attachment
+      description: "Retrieves the contents of a ticket attachment. \nAttachments are\
+        \ used to provide additional information \nabout a ticket after its creation.\n\
+        Attachments can be text, image, or video files.\n"
+      operationId: ticketAttachmentGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: attachmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets/{ticketId}/comments:
+    get:
+      summary: Get ticket comments
+      description: 'Returns the list of comments for a support ticket.
+
+        Comments are used to provide additional information about a ticket after its
+        creation.
+
+        '
+      operationId: ticketCommentsGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TicketComment'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    post:
+      summary: Add ticket comment
+      description: 'Add a new comment to the support ticket with identifier ticketId.
+
+        Comments are used to provide additional information about a ticket after its
+        creation.
+
+        Max comment length is 5000 characters.
+
+        The request body has the following inputs:
+
+        - text: The comment text.
+
+        '
+      operationId: ticketCommentsPost
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicketComment'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketComment'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes:
+    get:
+      summary: Get all CCVs
+      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
+        for an organization based on the Organization Identifier
+
+        provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeGet
+      tags:
+      - CCVs
       parameters:
       - name: X-Organization-Id
         in: header
@@ -190,149 +1006,97 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/FixConnection'
-              examples:
-                CloudTypeExample:
-                  value:
-                  - identifier: 00df8dfa-f1df-4af6-be2b-71d672256165
-                    connectionType: cloud
-                    connectionData:
-                      bandwidth: 2
-                      bandwidthUnits: gbps
-                      connectionSubType: azure_express_route_circuit
-                      factionLocations:
-                      - DC15
-                      providerRegion: us-east-1
-                      crossCloud: false
-                    active: true
-                    state: Ready
-                  - identifier: 00d6hhddfa-f1df-4af6-be2b-71d67246386467
-                    connectionType: cloud
-                    connectionData:
-                      bandwidth: 5
-                      bandwidthUnits: gbps
-                      connectionSubType: aws_direct_connect
-                      factionLocations:
-                      - DC15
-                      providerRegion: us-east-1
-                      accountId: exampleinc
-                      vifIds:
-                      - gfhgdfjhd-yrueyr88
-                      - 123-gggg
-                      crossCloud: true
-                    active: true
-                    state: Ready
-                  - identifier: d620e245-89cd-4a0d-b819-ffbd0f30781d
-                    connectionType: cloud
-                    connectionData:
-                      bandwidth: 5
-                      bandwidthUnits: gbps
-                      connectionSubType: gcp_partner_interconnect
-                      factionLocations:
-                      - DC15
-                      providerRegion: us-east-1
-                      pairingKey: key1
-                      crossCloud: false
-                    active: true
-                    state: Ready
-                  - identifier: d9d6dd76-861f-4ac3-b960-16b8630515c4
-                    connectionType: cloud
-                    connectionData:
-                      bandwidth: 5
-                      bandwidthUnits: gbps
-                      connectionSubType: oci_fast_connect
-                      factionLocations:
-                      - DC15
-                      providerRegion: us-east-1
-                      tenancy: ''
-                      localPeeringGateway: ''
-                      crossCloud: false
-                    active: true
-                    state: Ready
-                PrivateTypeExample:
-                  value:
-                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
-                    connectionType: private
-                    connectionData:
-                      bandwidth: 1
-                      bandwidthUnits: gbps
-                      connectionSubType: sdn_provider_connection
-                      factionLocations:
-                      - UK1
-                    active: true
-                    state: Ready
-                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
-                    connectionType: private
-                    connectionData:
-                      bandwidth: 1
-                      bandwidthUnits: gbps
-                      connectionSubType: facility_backbone_connection
-                      factionLocations:
-                      - UK1
-                    active: true
-                    state: Ready
-                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
-                    connectionType: private
-                    connectionData:
-                      bandwidth: 1
-                      bandwidthUnits: gbps
-                      connectionSubType: intrafacility_cross_connect
-                      factionLocations:
-                      - UK1
-                    active: true
-                    state: Ready
-                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
-                    connectionType: private
-                    connectionData:
-                      bandwidth: 1
-                      bandwidthUnits: gbps
-                      connectionSubType: traditional_circuit
-                      factionLocations:
-                      - UK1
-                    active: true
-                    state: Ready
-                InternetTypeExample:
-                  value:
-                  - identifier: 00df8dfa-f1df-4af6-be2b-71d6722800089
-                    connectionType: internet
-                    connectionData:
-                      bandwidth: 10
-                      bandwidthUnits: gbps
-                      factionLocations:
-                      - UK1
-                    active: true
-                    state: Ready
-                InterRegionTypeExample:
-                  value:
-                  - identifier: 00df8dfa-f1df-4af6-be2b-71d672277779
-                    connectionType: interRegion
-                    connectionData:
-                      bandwidth: 5
-                      bandwidthUnits: gbps
-                      factionLocations:
-                      - UK1
-                      - FR7
-                    active: true
-                    state: Ready
+                  $ref: '#/components/schemas/CCV'
+              example:
+              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
-          description: Error Unauthorized
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
-  /v2/fix/connections/{connectionId}:
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}:
     get:
-      description: Returns a single Fix Connection by Identifier.
-      summary: Returns a single Fix Connection by Identifier.
-      operationId: get_connection
+      summary: Get CCV by ID
+      description: 'Returns the information regarding a particular Cloud Control Volume
+        (CCV)
+
+        based on the Organization Identifier provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeIdGet
       tags:
-      - FIX Connections
+      - CCVs
       parameters:
       - name: X-Organization-Id
         in: header
@@ -341,11 +1105,10 @@ paths:
           nullable: false
           format: uuid
         required: true
-      - name: connectionId
+      - name: ccvId
         in: path
         schema:
           type: string
-          nullable: false
           format: uuid
         required: true
       responses:
@@ -354,31 +1117,120 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FixConnection'
+                $ref: '#/components/schemas/CCV'
+              example:
+                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
-    patch:
-      description: Updates attributes of a single connection.
-      summary: Updates attributes of a single connection.
-      operationId: patch_connection
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}/metrics:
+    get:
+      summary: Get CCV metrics
+      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
+        ccvId.
+
+        Metrics include the CCV status, total capacity in bytes, and used capacity
+        in bytes.
+
+        '
+      operationId: ccvMetricsGet
       tags:
-      - FIX Connections
+      - CCVs
       parameters:
       - name: X-Organization-Id
         in: header
@@ -387,68 +1239,10 @@ paths:
           nullable: false
           format: uuid
         required: true
-      - name: connectionId
+      - name: ccvId
         in: path
         schema:
           type: string
-          nullable: false
-          format: uuid
-        required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchFixConnection'
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FixConnection'
-        '400':
-          description: Error Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorBadRequest'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-    delete:
-      description: Removes an active connection.
-      summary: Removes an active connection.
-      operationId: delete_connection
-      tags:
-      - FIX Connections
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: connectionId
-        in: path
-        schema:
-          type: string
-          nullable: false
           format: uuid
         required: true
       responses:
@@ -457,25 +1251,94 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FixConnection'
+                $ref: '#/components/schemas/CCVMetrics'
+              example:
+                health: healthy
+                capacity:
+                  total: 10
+                  used: 1
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/organizations:
     get:
       summary: Get list of organizations
@@ -683,9 +1546,9 @@ paths:
         \ to users to control their permissions.\nThere are two categories of roles:\
         \ Portal roles and VPN roles.\n\nPortal roles control the actions available\
         \ in the Faction portal.\nThe possible portal roles are:\n  - <b>User:</b>\
-        \ Enables read access\n  - <b>Technician:</b> Enables write access \n  - <b>Org_Admin:</b>\
+        \ Enables read access\n  - <b>Technician:</b> Enables write access\n  - <b>Org_Admin:</b>\
         \ Enables user management\n  - <b>Group_Admin:</b> Enables multiple organization\
-        \ management \n\nVPN roles determine which VPNs a user can access. \n"
+        \ management\n\nVPN roles determine which VPNs a user can access.\n"
       operationId: organizationRolesGet
       parameters:
       - name: organizationId
@@ -900,17 +1763,17 @@ paths:
       summary: Enable Single Sign-On (SSO)
       description: "Enables Single Sign-On (SSO) through an OpenID Connect (OIDC)\
         \ identity provider.\nThe request body should contain the information necessary\
-        \ to configure the OIDC identity provider. \nThe configuration includes mapping\
-        \ the attributes provided by your OIDC application \nto userName and email\
-        \ attributes used by the Faction portal. \n- <b>clientId:</b> The client ID\
-        \ of your OIDC application \n- <b>discoveryUri:</b> Your OIDC application's\
+        \ to configure the OIDC identity provider.\nThe configuration includes mapping\
+        \ the attributes provided by your OIDC application\nto userName and email\
+        \ attributes used by the Faction portal.\n- <b>clientId:</b> The client ID\
+        \ of your OIDC application\n- <b>discoveryUri:</b> Your OIDC application's\
         \ discovery URI\n- <b>clientSecret:</b> The client secret of your OIDC application\n\
         - <b>userName:</b> Attribute from your OIDC application which will be used\
         \ as Faction portal username\n- <b>email:</b> Attribute from your OIDC application\
         \ which will be used as Faction portal email\n- <b>externalAuthorization:</b>\
         \ Attribute from your OIDC application which will be used to\n  determine\
         \ users' Faction portal group membership\n- <b>mfaAttest:</b> By providing\
-        \ a value of \"true\", you attest that the identity provider \n  configured\
+        \ a value of \"true\", you attest that the identity provider\n  configured\
         \ in this request requires multi-factor authentication (MFA).\n"
       operationId: ssoPost
       tags:
@@ -1034,9 +1897,13 @@ paths:
                 type: string
     put:
       summary: Update Single Sign-On (SSO) configuration
-      description: "Updates Single Sign-On (SSO) configuration for and organization.\
-        \ \nSee `POST /{organizationId}/sso` for a description of the values \nin\
-        \ the request body.\n"
+      description: 'Updates Single Sign-On (SSO) configuration for an organization.
+
+        See `POST /{organizationId}/sso` for a description of the values
+
+        in the request body.
+
+        '
       operationId: ssoPut
       tags:
       - Organizations
@@ -1273,13 +2140,22 @@ paths:
   /v1/organizations/{organizationId}/sso/groups:
     get:
       summary: Get list of organization's SSO groups
-      description: "Provides a list of the organization's SSO groups. \n\nSSO groups\
-        \ are used to \nautomatically assign users' roles based on their external\
-        \ authorizaitons.\nAny user with an external authorization which matches an\
-        \ SSO group's `groupName` \nwill be added to that group and assigned the roles\
-        \ associated with that group.\nExternal authorizations are provided by the\
-        \ organization's identity provider \nas configured by the `/{organizationId}/sso`\
-        \ endpoint.\n"
+      description: 'Provides a list of the organization''s SSO groups.
+
+
+        SSO groups are used to
+
+        automatically assign users'' roles based on their external authorizaitons.
+
+        Any user with an external authorization which matches an SSO group''s `groupName`
+
+        will be added to that group and assigned the roles associated with that group.
+
+        External authorizations are provided by the organization''s identity provider
+
+        as configured by the `/{organizationId}/sso` endpoint.
+
+        '
       operationId: ssoGroupsGet
       tags:
       - Organizations
@@ -1398,12 +2274,22 @@ paths:
                 type: string
     post:
       summary: Create SSO group
-      description: "Creates an SSO group. \n\nSSO groups are used to \nautomatically\
-        \ assign users' roles based on their external authorizaitons.\nAny user with\
-        \ an external authorization which matches an SSO group's `groupName` \nwill\
-        \ be added to that group and assigned the roles associated with that group.\n\
-        External authorizations are provided by the organization's identity provider\
-        \ \nas configured by the `/{organizationId}/sso` endpoint.\n"
+      description: 'Creates an SSO group.
+
+
+        SSO groups are used to
+
+        automatically assign users'' roles based on their external authorizaitons.
+
+        Any user with an external authorization which matches an SSO group''s `groupName`
+
+        will be added to that group and assigned the roles associated with that group.
+
+        External authorizations are provided by the organization''s identity provider
+
+        as configured by the `/{organizationId}/sso` endpoint.
+
+        '
       operationId: ssoGroupsPost
       tags:
       - Organizations
@@ -1645,12 +2531,22 @@ paths:
                 type: string
     put:
       summary: Update SSO group
-      description: "Updates the SSO group with ID `groupId`.\n\nSSO groups are used\
-        \ to \nautomatically assign users' roles based on their external authorizaitons.\n\
-        Any user with an external authorization which matches an SSO group's `groupName`\
-        \ \nwill be added to that group and assigned the roles associated with that\
-        \ group.\nExternal authorizations are provided by the organization's identity\
-        \ provider \nas configured by the `/{organizationId}/sso` endpoint.\n"
+      description: 'Updates the SSO group with ID `groupId`.
+
+
+        SSO groups are used to
+
+        automatically assign users'' roles based on their external authorizaitons.
+
+        Any user with an external authorization which matches an SSO group''s `groupName`
+
+        will be added to that group and assigned the roles associated with that group.
+
+        External authorizations are provided by the organization''s identity provider
+
+        as configured by the `/{organizationId}/sso` endpoint.
+
+        '
       operationId: ssoGroupIdPut
       tags:
       - Organizations
@@ -2139,940 +3035,6 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/tickets:
-    get:
-      summary: Get tickets
-      description: "Gets the list of support tickets for the organization \nspecified\
-        \ by the X-Organization-Id header. \nThe following query parameters are available\
-        \ for filtering the returned tickets:\n  - status\n  - number\n  - title\n\
-        \  - lastUpdatedFrom\n  - lastUpdatedTo\n  - openedAtFrom\n  - openedAtTo\n\
-        \nPagination is available by providing <b>offset</b> and <b>limit</b> \nquery\
-        \ parameters. Sorting is controlled by specifying <b>sortField</b> and \n\
-        <b>sortDirection</b>.\n"
-      operationId: ticketsGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: offset
-        in: query
-        description: The response offset for the pagination
-        schema:
-          type: number
-          nullable: false
-          format: number
-      - name: limit
-        in: query
-        description: The response limit for the pagination
-        schema:
-          type: number
-          nullable: false
-          format: number
-      - name: number
-        in: query
-        description: The ticket number to use as a filter.
-        schema:
-          type: number
-          nullable: false
-          format: number
-      - name: status
-        in: query
-        description: The list of statuses to use as a filter.
-        schema:
-          type: array
-          items:
-            $ref: '#/components/schemas/TicketStatus'
-      - name: lastUpdatedFrom
-        in: query
-        description: The starting date to use as a filter.
-        schema:
-          type: string
-          format: date-time
-      - name: lastUpdatedTo
-        in: query
-        description: The end date to use as a filter.
-        schema:
-          type: string
-          format: date-time
-      - name: openedAtFrom
-        in: query
-        description: The starting date to use as a filter.
-        schema:
-          type: string
-          format: date-time
-      - name: openedAtTo
-        in: query
-        description: The end date to use as a filter.
-        schema:
-          type: string
-          format: date-time
-      - name: title
-        in: query
-        description: The title to use as a filter.
-        schema:
-          type: string
-      - name: sortField
-        in: query
-        description: The field name to use for sort tickets.
-        schema:
-          $ref: '#/components/schemas/SortField'
-      - name: sortDirection
-        in: query
-        description: The sort direction
-        schema:
-          $ref: '#/components/schemas/SortDirection'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Ticket'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-    post:
-      summary: Create ticket
-      description: Creates a new support ticket for the given organization. Provide
-        a title for the ticket along with a description of the requested support.
-        Upon successful creation, a ticket will notify the Faction Inc. support team
-        to provide assistance.
-      operationId: ticketsPost
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTicket'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ticket'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/tickets/{ticket_id}:
-    get:
-      summary: Get a single ticket
-      description: Gets the details of a single support ticket. Specify the requested
-        ticket by supplying the ticket's <b>identifier</b> as the <b>ticket_id</b>
-        field in the request path.
-      operationId: ticketGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticket_id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ticket'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/tickets/{ticket_id}/attachments:
-    get:
-      summary: Get ticket attachments
-      description: Gets the metadata for each attachment on a support ticket. Specify
-        the requested ticket by supplying the ticket's <b>identifier</b> as the <b>ticket_id</b>
-        field in the request path. Use the `/{ticket_id}/attachments/{attachment_id}`
-        endpoint to get the attachment itself.
-      operationId: ticketAttachmentsGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticket_id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TicketAttachment'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-    post:
-      summary: Add attachment to ticket
-      description: "Add a new attachment to a specific support ticket.\nThe request\
-        \ body Content-Type is `multipart/form-data` and contains the file to be attached.\n\
-        Attachments can be text, image, or video files.\nSupported attachment file\
-        \ types include:\n  - .txt\n  - .pdf\n  - .doc\n  - .docx\n  - .xls\n  - .xlsx\n\
-        \  - .png\n  - .jpg\n  - .jpeg\n  - .gif\n  - .svg\n  - .mp4\n  - .mov\n"
-      operationId: ticketAttachmentsPost
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticket_id
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateTicketAttachment'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TicketAttachment'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/tickets/{ticket_id}/attachments/{attachment_id}:
-    get:
-      summary: Get ticket attachment
-      description: Retrieves the contents of a ticket attachment. Attachments are
-        used to provide additional information about a ticket after its creation.
-        Attachments can be text, image, or video files.
-      operationId: ticketAttachmentGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticket_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - name: attachment_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      responses:
-        '200':
-          description: Success.
-          content:
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/tickets/{ticket_id}/comments:
-    get:
-      summary: Get ticket comments
-      description: Returns the list of comments for a support ticket. Comments are
-        used to provide additional information about a ticket after its creation.
-      operationId: ticketCommentsGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticket_id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TicketComment'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-    post:
-      summary: Add ticket comment
-      description: Add a new comment to the support ticket with identifier ticket_id.
-        Comments are used to provide additional information about a ticket after its
-        creation. Max comment length is 5000 characters.
-      operationId: ticketCommentsPost
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticket_id
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTicketComment'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TicketComment'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v1/dashboards:
     get:
       description: Returns a list of the dashboards with basic widgets configuration
@@ -3201,6 +3163,8 @@ paths:
                 oneOf:
                 - $ref: '#/components/schemas/WidgetLine'
                 - $ref: '#/components/schemas/WidgetTable'
+                - $ref: '#/components/schemas/WidgetBigNumber'
+                - $ref: '#/components/schemas/WidgetAlert'
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -3283,6 +3247,700 @@ paths:
               explode: false
               schema:
                 type: string
+  /v1/fix/connections:
+    post:
+      description: Create a new FIX Connection.
+      summary: Create a new FIX Connection.
+      operationId: create_connection
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: locationCode
+        in: query
+        schema:
+          type: string
+        required: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFixConnection'
+            examples:
+              AwsExample:
+                value:
+                  connectionType: cloud
+                  connectionData:
+                    connectionSubType: aws_direct_connect
+                    providerRegion: us-east-1
+                    factionLocations:
+                    - DC15
+                    bandwidth: 12
+                    accountId: exampleinc
+                    crossCloud: true
+              AzureExample:
+                value:
+                  connectionType: cloud
+                  connectionData:
+                    connectionSubType: azure_express_route_circuit
+                    providerRegion: eastus
+                    factionLocations:
+                    - DC15
+                    bandwidth: 2
+              GoogleExample:
+                value:
+                  connectionType: cloud
+                  connectionData:
+                    connectionSubType: gcp_partner_interconnect
+                    providerRegion: eastus
+                    factionLocations:
+                    - DC15
+                    bandwidth: 2
+                    pairingKey: 25d6bf5d-261c-44bf-b85e-dccea24d4451
+              OracleExample:
+                value:
+                  connectionType: cloud
+                  connectionData:
+                    connectionSubType: oci_fast_connect
+                    providerRegion: eastus
+                    factionLocations:
+                    - DC15
+                    bandwidth: 3
+                    tenancy: 5ad19ead-592b-48af-8447-f7752991c35d
+                    localPeeringGateway: b2e045bc-7557-40bc-ab05-181bd50da208
+              InternetExample:
+                value:
+                  connectionType: internet
+                  connectionData:
+                    factionLocations:
+                    - DC15
+                    bandwidth: 14
+              InterRegionExample:
+                value:
+                  connectionType: interRegion
+                  connectionData:
+                    factionLocations:
+                    - DC15
+                    - CHI1
+                    bandwidth: 5
+              PrivateFacilityBackboneExample:
+                value:
+                  connectionType: private
+                  connectionData:
+                    connectionSubType: facility_backbone_connection
+                    factionLocations:
+                    - DC15
+                    bandwidth: 5
+              PrivateIntrafacilityExample:
+                value:
+                  connectionType: private
+                  connectionData:
+                    connectionSubType: intrafacility_cross_connect
+                    factionLocations:
+                    - DC15
+                    bandwidth: 10
+              PrivateSdnProviderExample:
+                value:
+                  connectionType: private
+                  connectionData:
+                    connectionSubType: sdn_provider_connection
+                    factionLocations:
+                    - DC15
+                    bandwidth: 1
+              PrivateTraditionalCircuitExample:
+                value:
+                  connectionType: private
+                  connectionData:
+                    connectionSubType: traditional_circuit
+                    factionLocations:
+                    - DC15
+                    bandwidth: 10
+      responses:
+        '202':
+          description: Success
+          headers:
+            Location:
+              description: GET <url>/v1/fix/connections/{connectionId}/requests/{requestId}
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixConnection'
+        '400':
+          description: Error Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Error Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    get:
+      description: Returns a list of the Fix Connections.
+      summary: Returns a list of the Fix Connections.
+      operationId: get_connections
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FixConnection'
+              examples:
+                CloudTypeExample:
+                  value:
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d672256165
+                    connectionType: cloud
+                    connectionData:
+                      bandwidth: 2
+                      bandwidthUnits: gbps
+                      connectionSubType: azure_express_route_circuit
+                      factionLocations:
+                      - DC15
+                      providerRegion: us-east-1
+                      crossCloud: false
+                    active: true
+                    state: Ready
+                  - identifier: 00d6hhddfa-f1df-4af6-be2b-71d67246386467
+                    connectionType: cloud
+                    connectionData:
+                      bandwidth: 5
+                      bandwidthUnits: gbps
+                      connectionSubType: aws_direct_connect
+                      factionLocations:
+                      - DC15
+                      providerRegion: us-east-1
+                      accountId: exampleinc
+                      vifIds:
+                      - gfhgdfjhd-yrueyr88
+                      - 123-gggg
+                      crossCloud: true
+                    active: true
+                    state: Ready
+                  - identifier: d620e245-89cd-4a0d-b819-ffbd0f30781d
+                    connectionType: cloud
+                    connectionData:
+                      bandwidth: 5
+                      bandwidthUnits: gbps
+                      connectionSubType: gcp_partner_interconnect
+                      factionLocations:
+                      - DC15
+                      providerRegion: us-east-1
+                      pairingKey: key1
+                      crossCloud: false
+                    active: true
+                    state: Ready
+                  - identifier: d9d6dd76-861f-4ac3-b960-16b8630515c4
+                    connectionType: cloud
+                    connectionData:
+                      bandwidth: 5
+                      bandwidthUnits: gbps
+                      connectionSubType: oci_fast_connect
+                      factionLocations:
+                      - DC15
+                      providerRegion: us-east-1
+                      tenancy: ''
+                      localPeeringGateway: ''
+                      crossCloud: false
+                    active: true
+                    state: Ready
+                PrivateTypeExample:
+                  value:
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
+                    connectionType: private
+                    connectionData:
+                      bandwidth: 1
+                      bandwidthUnits: gbps
+                      connectionSubType: sdn_provider_connection
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
+                    connectionType: private
+                    connectionData:
+                      bandwidth: 1
+                      bandwidthUnits: gbps
+                      connectionSubType: facility_backbone_connection
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
+                    connectionType: private
+                    connectionData:
+                      bandwidth: 1
+                      bandwidthUnits: gbps
+                      connectionSubType: intrafacility_cross_connect
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d67225889
+                    connectionType: private
+                    connectionData:
+                      bandwidth: 1
+                      bandwidthUnits: gbps
+                      connectionSubType: traditional_circuit
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                InternetTypeExample:
+                  value:
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d6722800089
+                    connectionType: internet
+                    connectionData:
+                      bandwidth: 10
+                      bandwidthUnits: gbps
+                      factionLocations:
+                      - UK1
+                    active: true
+                    state: Ready
+                InterRegionTypeExample:
+                  value:
+                  - identifier: 00df8dfa-f1df-4af6-be2b-71d672277779
+                    connectionType: interRegion
+                    connectionData:
+                      bandwidth: 5
+                      bandwidthUnits: gbps
+                      factionLocations:
+                      - UK1
+                      - FR7
+                    active: true
+                    state: Ready
+        '401':
+          description: Error Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v1/fix/connections/{connectionId}:
+    get:
+      description: Returns a single Fix Connection by Identifier.
+      summary: Returns a single Fix Connection by Identifier.
+      operationId: get_connection
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: connectionId
+        in: path
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixConnection'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    patch:
+      description: Updates attributes of a single connection.
+      summary: Updates attributes of a single connection.
+      operationId: patch_connection
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: connectionId
+        in: path
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchFixConnection'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixConnection'
+        '400':
+          description: Error Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    delete:
+      description: Removes an active connection.
+      summary: Removes an active connection.
+      operationId: delete_connection
+      tags:
+      - FIX Connections
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: connectionId
+        in: path
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixConnection'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /v1/locations:
+    get:
+      description: Gets the list of Faction Locations which currently provide services
+        to a particular customer
+      summary: Lists Faction datacenters accessible by user's permissions
+      tags:
+      - Faction Location
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FactionLocation'
+              example:
+              - identifier: DEN3
+                name: US - Denver - 3
+                city: Denver
+              - identifier: DC15
+                name: US - Reston - 15
+                city: Reston
+              - identifier: SV12
+                name: US - Silicon Valley - 3
+                city: Silicon Valley
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/locations/{locationId}/availabilities:
+    get:
+      description: Gets the list of Faction Locations which currently provide services
+        to a particular customer
+      summary: Lists services available at a specified datacenter.
+      tags:
+      - Faction Location
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+      - name: locationId
+        in: path
+        required: true
+        schema:
+          type: string
+          nullable: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationAvailability'
+              example:
+              - regions:
+                - us-east-2
+                - us-east-1
+                - us-west-1
+                - us-west-2
+                - eu-central-1
+                - eu-west-2
+                provider: Aws
+              - regions:
+                - us-ashburn-1
+                - ap-osaka-1
+                provider: Oci
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/users:
     get:
       description: Gets the list of Users for given Organization.
@@ -3292,6 +3950,12 @@ paths:
       - Users
       parameters:
       - $ref: '#/components/parameters/X-Organization-Id'
+      - name: userId
+        in: query
+        schema:
+          type: string
+          format: uuid
+        required: false
       responses:
         '200':
           description: OK
@@ -3389,7 +4053,7 @@ paths:
                   roles:
                   - Technician
                   - User
-                  contact_preferences:
+                  contactPreferences:
                   - Primary_Contact
                   - Technical_Notifications
       responses:
@@ -3515,7 +4179,7 @@ paths:
                     roles:
                     - Technician
                     - User
-                    contact_preferences:
+                    contactPreferences:
                     - Primary_Contact
                     - Technical_Notifications
           headers:
@@ -4436,367 +5100,6 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/ccv/volumes:
-    get:
-      summary: Get all CCVs
-      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
-        for an organization based on the Organization Identifier
-
-        provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CCV'
-              example:
-              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}:
-    get:
-      summary: Get CCV by ID
-      description: 'Returns the information regarding a particular Cloud Control Volume
-        (CCV)
-
-        based on the Organization Identifier provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeIdGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCV'
-              example:
-                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}/metrics:
-    get:
-      summary: Get CCV metrics
-      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
-        ccvId.
-
-        Metrics include the CCV status, total capacity in bytes, and used capacity
-        in bytes.
-
-        '
-      operationId: ccvMetricsGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCVMetrics'
-              example:
-                health: healthy
-                capacity:
-                  total: 10
-                  used: 1
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
 components:
   parameters:
     X-Organization-Id:
@@ -4809,6 +5112,908 @@ components:
         nullable: false
       required: true
   schemas:
+    CreateTicket:
+      type: object
+      required:
+      - title
+      - description
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+      additionalProperties: false
+      example:
+        title: Sample problem
+        description: This is where the description of a problem that a customer is
+          experiencing will be added
+    Ticket:
+      type: object
+      required:
+      - identifier
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        number:
+          type: string
+        state:
+          $ref: '#/components/schemas/TicketStatus'
+        lastUpdated:
+          type: string
+          format: date-time
+        openedAt:
+          type: string
+          format: date-time
+        openedBy:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+      additionalProperties: false
+      example:
+        identifier: 02a2988d-eeb5-45cd-9d48-9acd1088de8e
+        number: CASE 010110
+        state: In Progress
+        lastUpdated: '2021-01-21T08:30:00Z'
+        openedAt: '2021-01-28T13:30:00Z'
+        openedBy: user@cutomer.com
+        title: Sample Case Ticket
+        description: Sample of a Case Ticket
+    CreateTicketComment:
+      type: object
+      required:
+      - text
+      properties:
+        text:
+          type: string
+      example:
+        text: This is a sample comment, which will be added to the ticket
+    TicketComment:
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        text:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+      example:
+        identifier: fcc3e4f0-e7e7-4b94-8a09-0821c057c416
+        text: Example comment from support
+        createdAt: '2021-01-21T08:30:00Z'
+        createdBy: support@factioninc.com
+    CreateTicketAttachment:
+      type: object
+      required:
+      - fileName
+      properties:
+        fileName:
+          type: string
+    TicketAttachment:
+      type: object
+      required:
+      - identifier
+      properties:
+        identifier:
+          type: string
+        fileName:
+          type: string
+        sizeBytes:
+          type: number
+        ticketId:
+          type: string
+        contentType:
+          type: string
+        createdAt:
+          type: string
+        createdBy:
+          type: string
+      example:
+        identifier: 428cf5d7-0c14-403c-8d2b-795e8adf1853
+        fileName: test_file.jpg
+        sizeInBytes: 1258290
+        ticketId: 6fa55f1b-bb1f-4339-94f7-29e3e9cffb4c
+        contentType: image/png
+        createdAt: '2021-01-21T08:30:00Z'
+        createBy: user@customer.com
+    TicketStatus:
+      type: string
+      enum:
+      - New
+      - Monitoring
+      - Acknowledged
+      - Open
+      - Closed
+      - Assigned
+      - In progress
+      - Resolved
+      - Cancelled
+      - On hold
+      - Awaiting Info
+    SortField:
+      type: string
+      enum:
+      - title
+      - number
+      - openedAt
+      - lastUpdated
+      - state
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
+    ErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 500
+        error: Internal Server Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorNotFound:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 404
+        error: Resource Not Found Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorUnauthorized:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 401
+        error: Provided authorization information is invalid
+        message: Unauthorized
+        detail: Valid authorization bearer token is required
+        path: /the/called/path-here
+    CCV:
+      required:
+      - identifier
+      - factionLocationId
+      - iqns
+      - name
+      - networks
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        type:
+          type: string
+        tier:
+          type: string
+        totalSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        usedSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        iops:
+          minimum: 0
+          type: number
+          format: float
+        sloThroughput:
+          maximum: 9223372036854776000
+          minimum: 0
+          type: integer
+          format: int64
+        factionLocationId:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        networks:
+          minItems: 1
+          type: array
+          items:
+            type: string
+        iqns:
+          type: array
+          items:
+            type: string
+        currentOperationId:
+          type: string
+          format: uuid
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          $ref: '#/components/schemas/CCVVersion'
+      additionalProperties: false
+      example:
+        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+        name: Example CCV v3
+        type: File Scale Out
+        tier: elite
+        totalSizeInBytes: 4096
+        usedSizeInBytes: 1024
+        iops: 0
+        sloThroughput: 25
+        factionLocationId: DC15
+        networks:
+        - network1
+        - network2
+        iqns:
+        - igns1
+        - iqns2
+        version: V3
+        createdAt: '2020-01-30T08:30:00Z'
+    CCVVersion:
+      type: string
+      enum:
+      - V2
+      - V3
+    CCVMetrics:
+      type: object
+      properties:
+        health:
+          $ref: '#/components/schemas/CCVHealthStatus'
+        capacity:
+          type: object
+          properties:
+            total:
+              type: number
+              example: 10
+            used:
+              type: number
+              example: 1
+    CCVHealthStatus:
+      type: string
+      enum:
+      - healthy
+      - unhealthy
+    Organization:
+      required:
+      - name
+      - identifier
+      - orgCode
+      type: object
+      properties:
+        orgCode:
+          type: string
+        identifier:
+          type: string
+          format: uuid
+        name:
+          type: string
+        pingPopulationId:
+          type: string
+          format: uuid
+      additionalProperties: false
+      example:
+        identifier: 23f8bfa4-3737-44b6-a74e-0603a01fc25a
+        orgCode: ACME
+        name: ACME Corporation
+        pingPopulationId: 1d0aa3fc-1d1f-4ea2-a21f-18ffea350df2
+    SSO:
+      type: object
+      required:
+      - clientId
+      - clientSecret
+      - discoveryUri
+      - userName
+      - email
+      - externalAuthorization
+      properties:
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        discoveryUri:
+          type: string
+        userName:
+          type: string
+          enum:
+          - providerAttributes.sub
+        email:
+          type: string
+          enum:
+          - providerAttributes.email
+        externalAuthorization:
+          type: string
+          enum:
+          - externalAuthorization
+      additionalProperties: false
+      example:
+        clientId: xddr5-678
+        discoveryUri: https://example.com/discovery
+        clientSecret: mysecret
+        userName: providerAttributes.sub
+        email: providerAttributes.email
+        externalAuthorization: externalAuthorization
+    SSOGet:
+      allOf:
+      - $ref: '#/components/schemas/SSO'
+      - type: object
+        properties:
+          callbackUrl:
+            type: string
+        required:
+        - callbackUrl
+        example:
+          callbackUrl: https://auth.factiondev.com/rp/callback/openid_connect
+    SSOPostBody:
+      allOf:
+      - $ref: '#/components/schemas/SSO'
+      - type: object
+        properties:
+          mfaAttest:
+            type: boolean
+        required:
+        - mfaAttest
+        example:
+          mfaAttest: true
+    GroupPostBody:
+      type: object
+      required:
+      - groupName
+      - roles
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        groupName:
+          type: string
+        roles:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Role'
+      example:
+        groupName: Portal_Users
+        roles:
+        - User
+        - Technician
+        - vpn_dc15_e01
+    Groups:
+      type: object
+      required:
+      - identifier
+      - groupName
+      - roles
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        groupName:
+          type: string
+        roles:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/Role'
+      example:
+        identifier: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        groupName: Portal_Users
+        roles:
+        - User
+        - Technician
+        - vpn_dc15_e01
+    Role:
+      anyOf:
+      - $ref: '#/components/schemas/PortalRole'
+      - type: string
+        example: vpn_dc15_e01
+    PortalRole:
+      type: string
+      enum:
+      - User
+      - Technician
+      - Org_Admin
+      - Group_Admin
+    Roles:
+      type: object
+      properties:
+        portalRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortalRole'
+          example:
+          - User
+          - Technician
+          - Org_Admin
+          - Group_Admin
+        vpnRoles:
+          type: array
+          items:
+            type: string
+            example: vpn_dc15_e01
+    GroupDeleted:
+      type: boolean
+      properties:
+        Deleted:
+          type: boolean
+      example:
+        groupDeleted: true
+    SSODeleted:
+      type: boolean
+      properties:
+        ssoDeleted:
+          type: boolean
+      example:
+        ssoDeleted: true
+    SPCallBack:
+      type: string
+      properties:
+        SPcallBackUri:
+          type: boolean
+      example:
+        SPcallBackUri: https://auth.pingone.com/51441281-305c-4e91-acc0-233470671c49/rp/callback/openid_connect
+    APIKey:
+      type: object
+      properties:
+        name:
+          type: string
+        clientId:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      example:
+        name: API Key 1
+        clientId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        roles:
+        - User
+        - Technician
+        - vpn_dc15_e01
+        createdBy: my_user
+        createdAt: 2023-01-01 12:00:00+00:00
+    APIKeyPost:
+      type: object
+      properties:
+        name:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+      example:
+        name: API Key 1
+        roles:
+        - User
+        - Technician
+    Dashboard:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        widgetsConfiguration:
+          type: array
+          items:
+            $ref: '#/components/schemas/WidgetConfiguration'
+          nullable: false
+      additionalProperties: false
+    WidgetConfiguration:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        type:
+          type: string
+          enum:
+          - cgraph
+          - table
+        col:
+          type: number
+          nullable: false
+        sizex:
+          type: number
+          nullable: false
+        row:
+          type: number
+          nullable: false
+        sizey:
+          type: number
+          nullable: false
+      additionalProperties: true
+    WidgetLine:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        verticalLabel:
+          type: string
+          nullable: false
+        startTime:
+          type: number
+          nullable: false
+        endTime:
+          type: number
+          nullable: false
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              visible:
+                type: boolean
+              legend:
+                type: string
+              data:
+                type: array
+                items:
+                  type: number
+              color:
+                type: string
+              label:
+                type: string
+              min:
+                type: number
+              max:
+                type: number
+              avg:
+                type: number
+        timestamps:
+          type: array
+          items:
+            type: number
+      additionalProperties: true
+    WidgetTable:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        pageSize:
+          type: string
+        columnHeaders:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              visible:
+                type: boolean
+              size:
+                type: number
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              deviceId:
+                type: number
+              deviceDisplayName:
+                type: string
+              cells:
+                type: array
+                items:
+                  type: number
+      additionalProperties: true
+    WidgetAlert:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        type:
+          type: string
+          nullable: false
+        searchId:
+          type: string
+          nullable: false
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+              internalId:
+                type: string
+              startEpoch:
+                type: integer
+              endEpoch:
+                type: integer
+              acked:
+                type: boolean
+              ackedEpoch:
+                type: string
+              ackedBy:
+                type: string
+              ackComment:
+                type: string
+              rule:
+                type: string
+              ruleId:
+                type: integer
+              chain:
+                type: string
+              chainId:
+                type: integer
+              subChainId:
+                type: integer
+              nextRecipient:
+                type: integer
+              receivedList:
+                type: string
+              severity:
+                type: integer
+              cleared:
+                type: boolean
+              sdted:
+                type: boolean
+              SDT:
+                type: object
+                nullable: true
+                properties:
+                  description:
+                    type: string
+              alertValue:
+                type: string
+              threshold:
+                type: string
+              clearValue:
+                type: string
+              monitorObjectId:
+                type: integer
+              monitorObjectType:
+                type: string
+              monitorObjectName:
+                type: string
+              monitorObjectGroups:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    fullPath:
+                      type: string
+                    groupType:
+                      type: integer
+                    servicesTemplatesId:
+                      type: integer
+                    name:
+                      type: string
+                    defaultAgentId:
+                      type: integer
+                    description:
+                      type: string
+                    alertEnable:
+                      type: boolean
+                    appliesTo:
+                      type: string
+                    id:
+                      type: integer
+                    createdOn:
+                      type: integer
+                    parentId:
+                      type: integer
+              resourceId:
+                type: integer
+              resourceTemplateId:
+                type: integer
+              resourceTemplateType:
+                type: string
+              resourceTemplateName:
+                type: string
+              instanceId:
+                type: integer
+              instanceName:
+                type: string
+              instanceDescription:
+                type: string
+              dataPointName:
+                type: string
+              dataPointId:
+                type: integer
+              detailMessage:
+                type: object
+                nullable: true
+                properties:
+                  description:
+                    type: string
+              customColumns:
+                type: object
+              enableAnomalyAlertSuppression:
+                type: string
+              enableAnomalyAlertGeneration:
+                type: string
+      example:
+        type: alert
+        name: vCenter Alerts
+        title: vCenter Alerts
+        searchId: ''
+        total: 16
+        items:
+        - id: DS57407296
+          type: dataSourceAlert
+          internalId: LMD33767083
+          startEpoch: 1691587541
+          endEpoch: 0
+          acked: false
+          ackedEpoch: 0
+          ackedBy: ''
+          ackComment: ''
+          rule: Critical
+          ruleId: 3
+          chain: default
+          chainId: 1
+          subChainId: 0
+          nextRecipient: 0
+          receivedList: ''
+          severity: 4
+          cleared: false
+          sdted: false
+          SDT: null
+          alertValue: '3.0'
+          threshold: = 0 2 3 timezone=America/Denver
+          clearValue: ''
+          monitorObjectId: 705
+          monitorObjectType: device
+          monitorObjectName: vcs.uni1.den3.loc
+          monitorObjectGroups:
+          - fullPath: Devices by Type/VMware vCenters
+            groupType: 0
+            servicesTemplatesId: 0
+            name: VMware vCenters
+            defaultAgentId: 0
+            description: ''
+            alertEnable: true
+            appliesTo: system.virtualization =~ "VMware ESX vcenter"
+            id: 7
+            createdOn: 0
+            parentId: 2
+          resourceId: 30856
+          resourceTemplateId: 1253
+          resourceTemplateType: DS
+          resourceTemplateName: VMware Alerts
+          instanceId: 96965708
+          instanceName: VMware_vCenter_Alerts-esxi105.uni1.den3.loc/Cannot connect
+            to storage
+          instanceDescription: Default alarm to monitor host connectivity to storage
+            device
+          dataPointName: State
+          dataPointId: 12920
+          detailMessage: null
+          customColumns: {}
+          enableAnomalyAlertSuppression: ''
+          enableAnomalyAlertGeneration: ''
+    WidgetBigNumber:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        type:
+          type: string
+          nullable: false
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              position:
+                type: integer
+              rounding:
+                type: integer
+              bottom_label:
+                type: string
+              value:
+                type: number
+              right_label:
+                type: string
+              color_level:
+                type: integer
+              error_message:
+                type: string
+              use_comma_separators:
+                type: boolean
+      example:
+        identifier: '3486'
+        name: Stats
+        type: bigNumber
+        items:
+        - position: 1
+          rounding: 0
+          bottomLabel: ''
+          value: 791.625
+          rightLabel: Total TB
+          colorLevel: 0
+          errorMessage: ''
+          useCommaSeparators: false
     FactionConnectionLocations:
       type: array
       minItems: 1
@@ -4944,7 +6149,7 @@ components:
         requestedChanges:
           type: array
           items:
-          - $ref: '#/components/schemas/FixConnectionRequest'
+            $ref: '#/components/schemas/FixConnectionRequest'
     CloudConnection:
       description: '## A connection to a customer-subscribed cloud service provider.
 
@@ -5423,564 +6628,43 @@ components:
         message: Bad Request
         detail: Valid request is required
         path: /the/called/path-here
-    ErrorDto:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 500
-        error: Internal Server Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorNotFound:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 404
-        error: Resource Not Found Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorUnauthorized:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 401
-        error: Provided authorization information is invalid
-        message: Unauthorized
-        detail: Valid authorization bearer token is required
-        path: /the/called/path-here
-    Organization:
+    FactionLocation:
       required:
-      - name
       - identifier
-      - orgCode
       type: object
       properties:
-        orgCode:
-          type: string
         identifier:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
           type: string
-          format: uuid
         name:
+          pattern: '[a-zA-Z0-9-_]+'
           type: string
-        pingPopulationId:
+        city:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
           type: string
-          format: uuid
-      additionalProperties: false
       example:
-        identifier: 23f8bfa4-3737-44b6-a74e-0603a01fc25a
-        orgCode: ACME
-        name: ACME Corporation
-        pingPopulationId: 1d0aa3fc-1d1f-4ea2-a21f-18ffea350df2
-    SSO:
+        identifier: DC15
+        name: US-Reston-15
+        city: Reston
+    LocationAvailability:
       type: object
-      required:
-      - clientId
-      - clientSecret
-      - discoveryUri
-      - userName
-      - email
-      - externalAuthorization
       properties:
-        clientId:
-          type: string
-        clientSecret:
-          type: string
-        discoveryUri:
-          type: string
-        userName:
-          type: string
-          enum:
-          - providerAttributes.sub
-        email:
-          type: string
-          enum:
-          - providerAttributes.email
-        externalAuthorization:
-          type: string
-          enum:
-          - externalAuthorization
-      additionalProperties: false
-      example:
-        clientId: xddr5-678
-        discoveryUri: https://example.com/discovery
-        clientSecret: mysecret
-        userName: providerAttributes.sub
-        email: providerAttributes.email
-        externalAuthorization: externalAuthorization
-    SSOGet:
-      allOf:
-      - $ref: '#/components/schemas/SSO'
-      - type: object
-        properties:
-          callbackUrl:
+        regions:
+          type: array
+          items:
+            maxLength: 36
+            minLength: 0
+            pattern: '[a-zA-Z0-9-_]+'
             type: string
-        required:
-        - callbackUrl
-        example:
-          callbackUrl: https://auth.factiondev.com/rp/callback/openid_connect
-    SSOPostBody:
-      allOf:
-      - $ref: '#/components/schemas/SSO'
-      - type: object
-        properties:
-          mfaAttest:
-            type: boolean
-        required:
-        - mfaAttest
-        example:
-          mfaAttest: true
-    GroupPostBody:
-      type: object
-      required:
-      - groupName
-      - role
-      properties:
-        identifier:
+        provider:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
           type: string
-          format: uuid
-        groupName:
-          type: string
-        roles:
-          type: array
-          items:
-            anyOf:
-            - $ref: '#/components/schemas/Role'
-      example:
-        groupName: Portal_Users
-        roles:
-        - User
-        - Technician
-        - vpn_dc15_e01
-    Groups:
-      type: object
-      required:
-      - identifier
-      - groupName
-      - role
-      properties:
-        identifier:
-          type: string
-          format: uuid
-        groupName:
-          type: string
-        roles:
-          type: array
-          items:
-            anyOf:
-            - $ref: '#/components/schemas/Role'
-      example:
-        identifier: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        groupName: Portal_Users
-        roles:
-        - User
-        - Technician
-        - vpn_dc15_e01
-    Role:
-      anyOf:
-      - $ref: '#/components/schemas/PortalRole'
-      - type: string
-        example: vpn_dc15_e01
-    PortalRole:
-      type: string
-      enum:
-      - User
-      - Technician
-      - Org_Admin
-      - Group_Admin
-    Roles:
-      type: object
-      properties:
-        portalRoles:
-          type: array
-          items:
-            $ref: '#/components/schemas/PortalRole'
-          example:
-          - User
-          - Technician
-          - Org_Admin
-          - Group_Admin
-        vpnRoles:
-          type: array
-          items:
-            type: string
-            example: vpn_dc15_e01
-    GroupDeleted:
-      type: boolean
-      properties:
-        Deleted:
-          type: boolean
-      example:
-        groupDeleted: true
-    SSODeleted:
-      type: boolean
-      properties:
-        ssoDeleted:
-          type: boolean
-      example:
-        ssoDeleted: true
-    SPCallBack:
-      type: string
-      properties:
-        SPcallBackUri:
-          type: boolean
-      example:
-        SPcallBackUri: https://auth.pingone.com/51441281-305c-4e91-acc0-233470671c49/rp/callback/openid_connect
-    APIKey:
-      type: object
-      properties:
-        name:
-          type: string
-        clientId:
-          type: string
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/Role'
-        createdBy:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-      example:
-        name: API Key 1
-        clientId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        roles:
-        - User
-        - Technician
-        - vpn_dc15_e01
-        createdBy: my_user
-        createdAt: 2023-01-01 12:00:00+00:00
-    APIKeyPost:
-      type: object
-      properties:
-        name:
-          type: string
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/Role'
-      example:
-        name: API Key 1
-        roles:
-        - User
-        - Technician
-    CreateTicket:
-      type: object
-      required:
-      - title
-      - description
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-      additionalProperties: false
-      example:
-        title: Sample problem
-        description: This is where the description of a problem that a customer is
-          experiencing will be added
-    Ticket:
-      type: object
-      required:
-      - identifier
-      properties:
-        identifier:
-          type: string
-          format: uuid
-        number:
-          type: string
-        state:
-          $ref: '#/components/schemas/TicketStatus'
-        lastUpdated:
-          type: string
-          format: date-time
-        openedAt:
-          type: string
-          format: date-time
-        openedBy:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-      additionalProperties: false
-      example:
-        identifier: 02a2988d-eeb5-45cd-9d48-9acd1088de8e
-        number: CASE 010110
-        state: In Progress
-        lastUpdated: '2021-01-21T08:30:00Z'
-        openedAt: '2021-01-28T13:30:00Z'
-        openedBy: user@cutomer.com
-        title: Sample Case Ticket
-        description: Sample of a Case Ticket
-    CreateTicketComment:
-      type: object
-      required:
-      - text
-      properties:
-        text:
-          type: string
-      example:
-        text: This is a sample comment, which will be added to the ticket
-    TicketComment:
-      type: object
-      properties:
-        identifier:
-          type: string
-          format: uuid
-        text:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        createdBy:
-          type: string
-      example:
-        identifier: fcc3e4f0-e7e7-4b94-8a09-0821c057c416
-        text: Example comment from support
-        createdAt: '2021-01-21T08:30:00Z'
-        createdBy: support@factioninc.com
-    CreateTicketAttachment:
-      type: object
-      required:
-      - fileName
-      properties:
-        fileName:
-          type: string
-    TicketAttachment:
-      type: object
-      required:
-      - identifier
-      properties:
-        identifier:
-          type: string
-        fileName:
-          type: string
-        sizeBytes:
-          type: number
-        ticketId:
-          type: string
-        contentType:
-          type: string
-        createdAt:
-          type: string
-        createdBy:
-          type: string
-      example:
-        identifier: 428cf5d7-0c14-403c-8d2b-795e8adf1853
-        fileName: test_file.jpg
-        sizeInBytes: 1258290
-        ticketId: 6fa55f1b-bb1f-4339-94f7-29e3e9cffb4c
-        contentType: image/png
-        createdAt: '2021-01-21T08:30:00Z'
-        createBy: user@customer.com
-    TicketStatus:
-      type: string
-      enum:
-      - New
-      - Monitoring
-      - Acknowledged
-      - Open
-      - Closed
-      - Assigned
-      - In progress
-      - Resolved
-      - Cancelled
-      - On hold
-      - Awaiting Info
-    SortField:
-      type: string
-      enum:
-      - title
-      - number
-      - openedAt
-      - lastUpdated
-      - state
-    SortDirection:
-      type: string
-      enum:
-      - asc
-      - desc
-    Dashboard:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        widgetsConfiguration:
-          type: array
-          items:
-            $ref: '#/components/schemas/WidgetConfiguration'
-          nullable: false
-      additionalProperties: false
-    WidgetConfiguration:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        type:
-          type: string
-          enum:
-          - cgraph
-          - table
-        col:
-          type: number
-          nullable: false
-        sizex:
-          type: number
-          nullable: false
-        row:
-          type: number
-          nullable: false
-        sizey:
-          type: number
-          nullable: false
-      additionalProperties: true
-    WidgetLine:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        verticalLabel:
-          type: string
-          nullable: false
-        startTime:
-          type: number
-          nullable: false
-        endTime:
-          type: number
-          nullable: false
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              visible:
-                type: boolean
-              legend:
-                type: string
-              data:
-                type: array
-                items:
-                  type: number
-              color:
-                type: string
-              label:
-                type: string
-              min:
-                type: number
-              max:
-                type: number
-              avg:
-                type: number
-        timestamps:
-          type: array
-          items:
-            type: number
-      additionalProperties: true
-    WidgetTable:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        pageSize:
-          type: string
-        columnHeaders:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              visible:
-                type: boolean
-              size:
-                type: number
-        rows:
-          type: array
-          items:
-            type: object
-            properties:
-              deviceId:
-                type: number
-              deviceDisplayName:
-                type: string
-              cells:
-                type: array
-                items:
-                  type: number
-      additionalProperties: true
     User:
       type: object
       properties:
@@ -6009,7 +6693,7 @@ components:
             - Org_Admin
             - Technician
             - User
-        contact_preferences:
+        contactPreferences:
           type: array
           items:
             type: string
@@ -6027,7 +6711,7 @@ components:
         roles:
         - Technician
         - User
-        contact_preferences:
+        contactPreferences:
         - Primary_Contact
         - Technical_Notifications
     UserPassword:
@@ -6068,7 +6752,7 @@ components:
           type: string
         lastName:
           type: string
-        contact_preferences:
+        contactPreferences:
           type: array
           items:
             type: string
@@ -6079,7 +6763,7 @@ components:
       example:
         firstName: John
         lastName: Doe
-        contact_preferences:
+        contactPreferences:
         - Technical_Notifications
     CreateUserRequestBody:
       type: object
@@ -6104,7 +6788,7 @@ components:
             - Org_Admin
             - Technician
             - User
-        contact_preferences:
+        contactPreferences:
           type: array
           items:
             type: string
@@ -6130,7 +6814,7 @@ components:
         roles:
         - Technician
         - User
-        contact_preferences:
+        contactPreferences:
         - Primary_Contact
         - Technical_Notifications
     UserAvatar:
@@ -6156,109 +6840,6 @@ components:
       properties:
         email:
           type: string
-    CCV:
-      required:
-      - identifier
-      - factionLocationId
-      - iqns
-      - name
-      - networks
-      type: object
-      properties:
-        identifier:
-          type: string
-          format: uuid
-          nullable: true
-        name:
-          type: string
-        type:
-          type: string
-        tier:
-          type: string
-        totalSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        usedSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        iops:
-          minimum: 0
-          type: number
-          format: float
-        sloThroughput:
-          maximum: 9223372036854776000
-          minimum: 0
-          type: integer
-          format: int64
-        factionLocationId:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-        networks:
-          minItems: 1
-          type: array
-          items:
-            type: string
-        iqns:
-          type: array
-          items:
-            type: string
-        currentOperationId:
-          type: string
-          format: uuid
-          nullable: true
-        createdDate:
-          type: string
-          format: date-time
-          nullable: true
-        version:
-          $ref: '#/components/schemas/CCVVersion'
-      additionalProperties: false
-      example:
-        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-        name: Example CCV v3
-        type: File Scale Out
-        tier: elite
-        totalSizeInBytes: 4096
-        usedSizeInBytes: 1024
-        iops: 0
-        sloThroughput: 25
-        factionLocationId: DC15
-        networks:
-        - network1
-        - network2
-        iqns:
-        - igns1
-        - iqns2
-        version: V3
-        createdAt: '2020-01-30T08:30:00Z'
-    CCVVersion:
-      type: string
-      enum:
-      - V2
-      - V3
-    CCVMetrics:
-      type: object
-      properties:
-        health:
-          $ref: '#/components/schemas/CCVHealthStatus'
-        capacity:
-          type: object
-          properties:
-            total:
-              type: number
-              example: 10
-            used:
-              type: number
-              example: 1
-    CCVHealthStatus:
-      type: string
-      enum:
-      - healthy
-      - unhealthy
   securitySchemes:
     orgContextAuthorizer:
       description: Custom Authorizer that will validate X-Organization-Id header within
