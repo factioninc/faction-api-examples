@@ -3153,6 +3153,42 @@ paths:
           type: string
           nullable: false
         required: true
+      - name: size
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: offset
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: sort
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: filter
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: customColumns
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: needMessage
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
       responses:
         '200':
           description: Success
@@ -3165,6 +3201,124 @@ paths:
                 - $ref: '#/components/schemas/WidgetTable'
                 - $ref: '#/components/schemas/WidgetBigNumber'
                 - $ref: '#/components/schemas/WidgetAlert'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Error Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/dashboards/{dashboardId}/widgets/{widgetId}/settings:
+    get:
+      description: Returns the settings for a widget
+      summary: Returns the settings for a widget
+      operationId: getWidgetSettings
+      tags:
+      - Dashboards
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: dashboardId
+        in: path
+        schema:
+          type: string
+          nullable: false
+        required: true
+      - name: widgetId
+        in: path
+        schema:
+          type: string
+          nullable: false
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                - $ref: '#/components/schemas/WidgetAlertSettings'
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -5968,6 +6122,254 @@ components:
           customColumns: {}
           enableAnomalyAlertSuppression: ''
           enableAnomalyAlertGeneration: ''
+    WidgetAlertSettings:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+        lastUpdatedOn:
+          type: number
+        lastUpdatedBy:
+          type: string
+        theme:
+          type: string
+        userPermission:
+          type: string
+        interval:
+          type: number
+        timescale:
+          type: string
+        displaySettings:
+          type: object
+          properties:
+            isShowAll:
+              type: boolean
+            showFilter:
+              type: boolean
+            columns:
+              type: array
+              items:
+                type: object
+                properties:
+                  visible:
+                    type: boolean
+                  isDynamic:
+                    type: boolean
+                  columnLabel:
+                    type: string
+                  columnKey:
+                    type: string
+            fontsize:
+              type: string
+            sort:
+              type: string
+        filters:
+          type: object
+          properties:
+            group:
+              type: string
+            host:
+              type: string
+            dataSource:
+              type: string
+            instance:
+              type: string
+            dataPoint:
+              type: string
+            severity:
+              type: string
+            acked:
+              type: string
+            sdted:
+              type: string
+            rule:
+              type: string
+            chain:
+              type: string
+            cleared:
+              type: string
+            keyword:
+              type: string
+            dependencyRole:
+              type: string
+            dependencyRoutingState:
+              type: string
+            anomaly:
+              type: string
+        parsedFilters:
+          type: object
+          properties:
+            group:
+              type: string
+            host:
+              type: string
+            dataSource:
+              type: string
+            instance:
+              type: string
+            dataPoint:
+              type: string
+            severity:
+              type: string
+            acked:
+              type: string
+            sdted:
+              type: string
+            rule:
+              type: string
+            chain:
+              type: string
+            cleared:
+              type: string
+            keyword:
+              type: string
+            dependencyRole:
+              type: string
+            dependencyRoutingState:
+              type: string
+            anomaly:
+              type: string
+      example:
+        description: ''
+        displaySettings:
+          columns:
+          - columnKey: alert-severity
+            columnLabel: Severity
+            isDynamic: null
+            visible: false
+          - columnKey: alert-began
+            columnLabel: Began
+            isDynamic: null
+            visible: true
+          - columnKey: alert-device
+            columnLabel: Resource/Website
+            isDynamic: null
+            visible: true
+          - columnKey: alert-datasource
+            columnLabel: LogicModule
+            isDynamic: null
+            visible: true
+          - columnKey: alert-datasource-instance
+            columnLabel: Instance
+            isDynamic: null
+            visible: true
+          - columnKey: alert-datapoint
+            columnLabel: Datapoint
+            isDynamic: null
+            visible: true
+          - columnKey: alert-value
+            columnLabel: Value
+            isDynamic: null
+            visible: true
+          - columnKey: alert-group
+            columnLabel: Group
+            isDynamic: null
+            visible: false
+          - columnKey: alert-notes
+            columnLabel: Notes
+            isDynamic: null
+            visible: false
+          - columnKey: alert-acked-by
+            columnLabel: Acknowledged By
+            isDynamic: null
+            visible: false
+          - columnKey: alert-acked-on
+            columnLabel: Acknowledged On
+            isDynamic: null
+            visible: false
+          - columnKey: alert-cleared-on
+            columnLabel: Cleared On
+            isDynamic: null
+            visible: false
+          - columnKey: alert-in-sdt
+            columnLabel: In SDT
+            isDynamic: null
+            visible: false
+          - columnKey: alert-rule-name
+            columnLabel: Alert Rule
+            isDynamic: null
+            visible: false
+          - columnKey: alert-escalation-chain
+            columnLabel: Escalation Chain
+            isDynamic: null
+            visible: false
+          - columnKey: alert-datasource-instance-description
+            columnLabel: Instance Description
+            isDynamic: null
+            visible: false
+          - columnKey: alert-full-path
+            columnLabel: Full Path
+            isDynamic: null
+            visible: false
+          - columnKey: alert-static-threshold
+            columnLabel: Static Threshold
+            isDynamic: null
+            visible: true
+          - columnKey: alert-dynamic-threshold
+            columnLabel: Dynamic Threshold
+            isDynamic: null
+            visible: true
+          - columnKey: alert-routing-state
+            columnLabel: Routing State
+            isDynamic: null
+            visible: false
+          - columnKey: alert-dependency-role
+            columnLabel: Dependency Role
+            isDynamic: null
+            visible: false
+          - columnKey: alert-dependent-alerts
+            columnLabel: Dependent Alerts
+            isDynamic: null
+            visible: false
+          fontsize: normal-font
+          isShowAll: false
+          showFilter: false
+          sort: startEpoch
+          sortDirection: desc
+        filters:
+          acked: all
+          anomaly: ''
+          chain: ''
+          cleared: 'no'
+          dataPoint: ''
+          dataSource: ''
+          dependencyRole: ''
+          dependencyRoutingState: ''
+          group: '%23%23vcenter_root%23%23*'
+          host: vcs.uni1.den3.loc
+          instance: ''
+          keyword: ''
+          rule: ''
+          sdted: all
+          severity: critical
+        interval: 3
+        lastUpdatedBy: user@factioninc.com
+        lastUpdatedOn: 1670258104
+        name: vCenter Alerts
+        parsedFilters:
+          acked: all
+          anomaly: ''
+          chain: ''
+          cleared: 'no'
+          dataPoint: ''
+          dataSource: ''
+          dependencyRole: ''
+          dependencyRoutingState: ''
+          group: Devices+by+Type%2FVMware+vCenters*
+          host: vcs.uni1.den3.loc
+          instance: ''
+          keyword: ''
+          rule: ''
+          sdted: all
+          severity: critical
+        theme: newSolidDarkBlue
+        timescale: day
+        type: alert
+        userPermission: write
     WidgetBigNumber:
       type: object
       properties:
