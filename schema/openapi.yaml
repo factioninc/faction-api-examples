@@ -978,367 +978,6 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/ccv/volumes:
-    get:
-      summary: Get all CCVs
-      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
-        for an organization based on the Organization Identifier
-
-        provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CCV'
-              example:
-              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}:
-    get:
-      summary: Get CCV by ID
-      description: 'Returns the information regarding a particular Cloud Control Volume
-        (CCV)
-
-        based on the Organization Identifier provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeIdGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCV'
-              example:
-                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}/metrics:
-    get:
-      summary: Get CCV metrics
-      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
-        ccvId.
-
-        Metrics include the CCV status, total capacity in bytes, and used capacity
-        in bytes.
-
-        '
-      operationId: ccvMetricsGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCVMetrics'
-              example:
-                health: healthy
-                capacity:
-                  total: 10
-                  used: 1
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v1/organizations:
     get:
       summary: Get list of organizations
@@ -3035,372 +2674,6 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/dashboards:
-    get:
-      description: Returns a list of the dashboards with basic widgets configuration
-      summary: Returns a list of the dashboards with basic widgets configuration
-      tags:
-      - Dashboards
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - in: query
-        name: type
-        schema:
-          type: string
-          enum:
-          - global
-          - client
-        description: The type of dashboard to return either global or client specific.  It
-          is an optional parameter.  If no type is specified it defaults to client
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Dashboard'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Error unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/dashboards/{dashboardId}/widgets/{widgetId}:
-    get:
-      description: Returns full widget configuration with data
-      summary: Returns full widget configuration with data
-      tags:
-      - Dashboards
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: dashboardId
-        in: path
-        schema:
-          type: string
-          nullable: false
-        required: true
-      - name: widgetId
-        in: path
-        schema:
-          type: string
-          nullable: false
-        required: true
-      - name: size
-        in: query
-        schema:
-          type: string
-          nullable: false
-        required: false
-      - name: offset
-        in: query
-        schema:
-          type: string
-          nullable: false
-        required: false
-      - name: sort
-        in: query
-        schema:
-          type: string
-          nullable: false
-        required: false
-      - name: filter
-        in: query
-        schema:
-          type: string
-          nullable: false
-        required: false
-      - name: customColumns
-        in: query
-        schema:
-          type: string
-          nullable: false
-        required: false
-      - name: needMessage
-        in: query
-        schema:
-          type: string
-          nullable: false
-        required: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                oneOf:
-                - $ref: '#/components/schemas/WidgetLine'
-                - $ref: '#/components/schemas/WidgetTable'
-                - $ref: '#/components/schemas/WidgetBigNumber'
-                - $ref: '#/components/schemas/WidgetAlert'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Error Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Error not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/dashboards/{dashboardId}/widgets/{widgetId}/settings:
-    get:
-      description: Returns the settings for a widget
-      summary: Returns the settings for a widget
-      operationId: getWidgetSettings
-      tags:
-      - Dashboards
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: dashboardId
-        in: path
-        schema:
-          type: string
-          nullable: false
-        required: true
-      - name: widgetId
-        in: path
-        schema:
-          type: string
-          nullable: false
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                oneOf:
-                - $ref: '#/components/schemas/WidgetAlertSettings'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Error Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Error not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v1/fix/connections:
     post:
       description: Create a new FIX Connection.
@@ -3854,21 +3127,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
-  /v1/locations:
+  /v1/dashboards:
     get:
-      description: Gets the list of Faction Locations which currently provide services
-        to a particular customer
-      summary: Lists Faction datacenters accessible by user's permissions
+      description: Returns a list of the dashboards with basic widgets configuration
+      summary: Returns a list of the dashboards with basic widgets configuration
       tags:
-      - Faction Location
+      - Dashboards
       parameters:
       - name: X-Organization-Id
         in: header
-        required: true
         schema:
           type: string
           nullable: false
           format: uuid
+        required: true
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum:
+          - global
+          - client
+        description: The type of dashboard to return either global or client specific.  It
+          is an optional parameter.  If no type is specified it defaults to client
       responses:
         '200':
           description: Success
@@ -3877,17 +3158,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/FactionLocation'
-              example:
-              - identifier: DEN3
-                name: US - Denver - 3
-                city: Denver
-              - identifier: DC15
-                name: US - Reston - 15
-                city: Reston
-              - identifier: SV12
-                name: US - Silicon Valley - 3
-                city: Silicon Valley
+                  $ref: '#/components/schemas/Dashboard'
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -3905,7 +3176,141 @@ paths:
               schema:
                 type: string
         '401':
-          description: Unauthorized
+          description: Error unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/dashboards/{dashboardId}/widgets/{widgetId}:
+    get:
+      description: Returns full widget configuration with data
+      summary: Returns full widget configuration with data
+      tags:
+      - Dashboards
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: dashboardId
+        in: path
+        schema:
+          type: string
+          nullable: false
+        required: true
+      - name: widgetId
+        in: path
+        schema:
+          type: string
+          nullable: false
+        required: true
+      - name: size
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: offset
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: sort
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: filter
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: customColumns
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      - name: needMessage
+        in: query
+        schema:
+          type: string
+          nullable: false
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                - $ref: '#/components/schemas/WidgetLine'
+                - $ref: '#/components/schemas/WidgetTable'
+                - $ref: '#/components/schemas/WidgetBigNumber'
+                - $ref: '#/components/schemas/WidgetAlert'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Error Unauthorized
           content:
             application/json:
               schema:
@@ -3970,49 +3375,42 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/locations/{locationId}/availabilities:
+  /v1/dashboards/{dashboardId}/widgets/{widgetId}/settings:
     get:
-      description: Gets the list of Faction Locations which currently provide services
-        to a particular customer
-      summary: Lists services available at a specified datacenter.
+      description: Returns the settings for a widget
+      summary: Returns the settings for a widget
+      operationId: getWidgetSettings
       tags:
-      - Faction Location
+      - Dashboards
       parameters:
       - name: X-Organization-Id
         in: header
-        required: true
         schema:
           type: string
           nullable: false
           format: uuid
-      - name: locationId
-        in: path
         required: true
+      - name: dashboardId
+        in: path
         schema:
           type: string
           nullable: false
+        required: true
+      - name: widgetId
+        in: path
+        schema:
+          type: string
+          nullable: false
+        required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LocationAvailability'
-              example:
-              - regions:
-                - us-east-2
-                - us-east-1
-                - us-west-1
-                - us-west-2
-                - eu-central-1
-                - eu-west-2
-                provider: Aws
-              - regions:
-                - us-ashburn-1
-                - ap-osaka-1
-                provider: Oci
+                type: object
+                oneOf:
+                - $ref: '#/components/schemas/WidgetAlertSettings'
           headers:
             Access-Control-Allow-Origin:
               style: simple
@@ -4030,7 +3428,7 @@ paths:
               schema:
                 type: string
         '401':
-          description: Unauthorized
+          description: Error Unauthorized
           content:
             application/json:
               schema:
@@ -5254,6 +4652,608 @@ paths:
               explode: false
               schema:
                 type: string
+  /v1/ccv/volumes:
+    get:
+      summary: Get all CCVs
+      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
+        for an organization based on the Organization Identifier
+
+        provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CCV'
+              example:
+              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}:
+    get:
+      summary: Get CCV by ID
+      description: 'Returns the information regarding a particular Cloud Control Volume
+        (CCV)
+
+        based on the Organization Identifier provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeIdGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCV'
+              example:
+                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}/metrics:
+    get:
+      summary: Get CCV metrics
+      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
+        ccvId.
+
+        Metrics include the CCV status, total capacity in bytes, and used capacity
+        in bytes.
+
+        '
+      operationId: ccvMetricsGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCVMetrics'
+              example:
+                health: healthy
+                capacity:
+                  total: 10
+                  used: 1
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/locations:
+    get:
+      description: Gets the list of Faction Locations which currently provide services
+        to a particular customer
+      summary: Lists Faction datacenters accessible by user's permissions
+      tags:
+      - Faction Location
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FactionLocation'
+              example:
+              - identifier: DEN3
+                name: US - Denver - 3
+                city: Denver
+              - identifier: DC15
+                name: US - Reston - 15
+                city: Reston
+              - identifier: SV12
+                name: US - Silicon Valley - 3
+                city: Silicon Valley
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/locations/{locationId}/availabilities:
+    get:
+      description: Gets the list of Faction Locations which currently provide services
+        to a particular customer
+      summary: Lists services available at a specified datacenter.
+      tags:
+      - Faction Location
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+      - name: locationId
+        in: path
+        required: true
+        schema:
+          type: string
+          nullable: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationAvailability'
+              example:
+              - regions:
+                - us-east-2
+                - us-east-1
+                - us-west-1
+                - us-west-2
+                - eu-central-1
+                - eu-west-2
+                provider: Aws
+              - regions:
+                - us-ashburn-1
+                - ap-osaka-1
+                provider: Oci
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
 components:
   parameters:
     X-Organization-Id:
@@ -5487,109 +5487,6 @@ components:
         message: Unauthorized
         detail: Valid authorization bearer token is required
         path: /the/called/path-here
-    CCV:
-      required:
-      - identifier
-      - factionLocationId
-      - iqns
-      - name
-      - networks
-      type: object
-      properties:
-        identifier:
-          type: string
-          format: uuid
-          nullable: true
-        name:
-          type: string
-        type:
-          type: string
-        tier:
-          type: string
-        totalSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        usedSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        iops:
-          minimum: 0
-          type: number
-          format: float
-        sloThroughput:
-          maximum: 9223372036854776000
-          minimum: 0
-          type: integer
-          format: int64
-        factionLocationId:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-        networks:
-          minItems: 1
-          type: array
-          items:
-            type: string
-        iqns:
-          type: array
-          items:
-            type: string
-        currentOperationId:
-          type: string
-          format: uuid
-          nullable: true
-        createdDate:
-          type: string
-          format: date-time
-          nullable: true
-        version:
-          $ref: '#/components/schemas/CCVVersion'
-      additionalProperties: false
-      example:
-        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-        name: Example CCV v3
-        type: File Scale Out
-        tier: elite
-        totalSizeInBytes: 4096
-        usedSizeInBytes: 1024
-        iops: 0
-        sloThroughput: 25
-        factionLocationId: DC15
-        networks:
-        - network1
-        - network2
-        iqns:
-        - igns1
-        - iqns2
-        version: V3
-        createdAt: '2020-01-30T08:30:00Z'
-    CCVVersion:
-      type: string
-      enum:
-      - V2
-      - V3
-    CCVMetrics:
-      type: object
-      properties:
-        health:
-          $ref: '#/components/schemas/CCVHealthStatus'
-        capacity:
-          type: object
-          properties:
-            total:
-              type: number
-              example: 10
-            used:
-              type: number
-              example: 1
-    CCVHealthStatus:
-      type: string
-      enum:
-      - healthy
-      - unhealthy
     Organization:
       required:
       - name
@@ -5806,616 +5703,6 @@ components:
         roles:
         - User
         - Technician
-    Dashboard:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        widgetsConfiguration:
-          type: array
-          items:
-            $ref: '#/components/schemas/WidgetConfiguration'
-          nullable: false
-      additionalProperties: false
-    WidgetConfiguration:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        type:
-          type: string
-          enum:
-          - cgraph
-          - table
-        col:
-          type: number
-          nullable: false
-        sizex:
-          type: number
-          nullable: false
-        row:
-          type: number
-          nullable: false
-        sizey:
-          type: number
-          nullable: false
-      additionalProperties: true
-    WidgetLine:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        verticalLabel:
-          type: string
-          nullable: false
-        startTime:
-          type: number
-          nullable: false
-        endTime:
-          type: number
-          nullable: false
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              visible:
-                type: boolean
-              legend:
-                type: string
-              data:
-                type: array
-                items:
-                  type: number
-              color:
-                type: string
-              label:
-                type: string
-              min:
-                type: number
-              max:
-                type: number
-              avg:
-                type: number
-        timestamps:
-          type: array
-          items:
-            type: number
-      additionalProperties: true
-    WidgetTable:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        pageSize:
-          type: string
-        columnHeaders:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              visible:
-                type: boolean
-              size:
-                type: number
-        rows:
-          type: array
-          items:
-            type: object
-            properties:
-              deviceId:
-                type: number
-              deviceDisplayName:
-                type: string
-              cells:
-                type: array
-                items:
-                  type: number
-      additionalProperties: true
-    WidgetAlert:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        type:
-          type: string
-          nullable: false
-        searchId:
-          type: string
-          nullable: false
-        total:
-          type: integer
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              type:
-                type: string
-              internalId:
-                type: string
-              startEpoch:
-                type: integer
-              endEpoch:
-                type: integer
-              acked:
-                type: boolean
-              ackedEpoch:
-                type: string
-              ackedBy:
-                type: string
-              ackComment:
-                type: string
-              rule:
-                type: string
-              ruleId:
-                type: integer
-              chain:
-                type: string
-              chainId:
-                type: integer
-              subChainId:
-                type: integer
-              nextRecipient:
-                type: integer
-              receivedList:
-                type: string
-              severity:
-                type: integer
-              cleared:
-                type: boolean
-              sdted:
-                type: boolean
-              SDT:
-                type: object
-                nullable: true
-                properties:
-                  description:
-                    type: string
-              alertValue:
-                type: string
-              threshold:
-                type: string
-              clearValue:
-                type: string
-              monitorObjectId:
-                type: integer
-              monitorObjectType:
-                type: string
-              monitorObjectName:
-                type: string
-              monitorObjectGroups:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    fullPath:
-                      type: string
-                    groupType:
-                      type: integer
-                    servicesTemplatesId:
-                      type: integer
-                    name:
-                      type: string
-                    defaultAgentId:
-                      type: integer
-                    description:
-                      type: string
-                    alertEnable:
-                      type: boolean
-                    appliesTo:
-                      type: string
-                    id:
-                      type: integer
-                    createdOn:
-                      type: integer
-                    parentId:
-                      type: integer
-              resourceId:
-                type: integer
-              resourceTemplateId:
-                type: integer
-              resourceTemplateType:
-                type: string
-              resourceTemplateName:
-                type: string
-              instanceId:
-                type: integer
-              instanceName:
-                type: string
-              instanceDescription:
-                type: string
-              dataPointName:
-                type: string
-              dataPointId:
-                type: integer
-              detailMessage:
-                type: object
-                nullable: true
-                properties:
-                  description:
-                    type: string
-              customColumns:
-                type: object
-              enableAnomalyAlertSuppression:
-                type: string
-              enableAnomalyAlertGeneration:
-                type: string
-      example:
-        type: alert
-        name: vCenter Alerts
-        title: vCenter Alerts
-        searchId: ''
-        total: 16
-        items:
-        - id: DS57407296
-          type: dataSourceAlert
-          internalId: LMD33767083
-          startEpoch: 1691587541
-          endEpoch: 0
-          acked: false
-          ackedEpoch: 0
-          ackedBy: ''
-          ackComment: ''
-          rule: Critical
-          ruleId: 3
-          chain: default
-          chainId: 1
-          subChainId: 0
-          nextRecipient: 0
-          receivedList: ''
-          severity: 4
-          cleared: false
-          sdted: false
-          SDT: null
-          alertValue: '3.0'
-          threshold: = 0 2 3 timezone=America/Denver
-          clearValue: ''
-          monitorObjectId: 705
-          monitorObjectType: device
-          monitorObjectName: vcs.uni1.den3.loc
-          monitorObjectGroups:
-          - fullPath: Devices by Type/VMware vCenters
-            groupType: 0
-            servicesTemplatesId: 0
-            name: VMware vCenters
-            defaultAgentId: 0
-            description: ''
-            alertEnable: true
-            appliesTo: system.virtualization =~ "VMware ESX vcenter"
-            id: 7
-            createdOn: 0
-            parentId: 2
-          resourceId: 30856
-          resourceTemplateId: 1253
-          resourceTemplateType: DS
-          resourceTemplateName: VMware Alerts
-          instanceId: 96965708
-          instanceName: VMware_vCenter_Alerts-esxi105.uni1.den3.loc/Cannot connect
-            to storage
-          instanceDescription: Default alarm to monitor host connectivity to storage
-            device
-          dataPointName: State
-          dataPointId: 12920
-          detailMessage: null
-          customColumns: {}
-          enableAnomalyAlertSuppression: ''
-          enableAnomalyAlertGeneration: ''
-    WidgetAlertSettings:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        type:
-          type: string
-        lastUpdatedOn:
-          type: number
-        lastUpdatedBy:
-          type: string
-        theme:
-          type: string
-        userPermission:
-          type: string
-        interval:
-          type: number
-        timescale:
-          type: string
-        displaySettings:
-          type: object
-          properties:
-            isShowAll:
-              type: boolean
-            showFilter:
-              type: boolean
-            columns:
-              type: array
-              items:
-                type: object
-                properties:
-                  visible:
-                    type: boolean
-                  isDynamic:
-                    type: boolean
-                  columnLabel:
-                    type: string
-                  columnKey:
-                    type: string
-            fontsize:
-              type: string
-            sort:
-              type: string
-        filters:
-          type: object
-          properties:
-            group:
-              type: string
-            host:
-              type: string
-            dataSource:
-              type: string
-            instance:
-              type: string
-            dataPoint:
-              type: string
-            severity:
-              type: string
-            acked:
-              type: string
-            sdted:
-              type: string
-            rule:
-              type: string
-            chain:
-              type: string
-            cleared:
-              type: string
-            keyword:
-              type: string
-            dependencyRole:
-              type: string
-            dependencyRoutingState:
-              type: string
-            anomaly:
-              type: string
-        parsedFilters:
-          type: object
-          properties:
-            group:
-              type: string
-            host:
-              type: string
-            dataSource:
-              type: string
-            instance:
-              type: string
-            dataPoint:
-              type: string
-            severity:
-              type: string
-            acked:
-              type: string
-            sdted:
-              type: string
-            rule:
-              type: string
-            chain:
-              type: string
-            cleared:
-              type: string
-            keyword:
-              type: string
-            dependencyRole:
-              type: string
-            dependencyRoutingState:
-              type: string
-            anomaly:
-              type: string
-      example:
-        description: ''
-        displaySettings:
-          columns:
-          - columnKey: alert-severity
-            columnLabel: Severity
-            isDynamic: null
-            visible: false
-          - columnKey: alert-began
-            columnLabel: Began
-            isDynamic: null
-            visible: true
-          - columnKey: alert-device
-            columnLabel: Resource/Website
-            isDynamic: null
-            visible: true
-          - columnKey: alert-datasource
-            columnLabel: LogicModule
-            isDynamic: null
-            visible: true
-          - columnKey: alert-datasource-instance
-            columnLabel: Instance
-            isDynamic: null
-            visible: true
-          - columnKey: alert-datapoint
-            columnLabel: Datapoint
-            isDynamic: null
-            visible: true
-          - columnKey: alert-value
-            columnLabel: Value
-            isDynamic: null
-            visible: true
-          - columnKey: alert-group
-            columnLabel: Group
-            isDynamic: null
-            visible: false
-          - columnKey: alert-notes
-            columnLabel: Notes
-            isDynamic: null
-            visible: false
-          - columnKey: alert-acked-by
-            columnLabel: Acknowledged By
-            isDynamic: null
-            visible: false
-          - columnKey: alert-acked-on
-            columnLabel: Acknowledged On
-            isDynamic: null
-            visible: false
-          - columnKey: alert-cleared-on
-            columnLabel: Cleared On
-            isDynamic: null
-            visible: false
-          - columnKey: alert-in-sdt
-            columnLabel: In SDT
-            isDynamic: null
-            visible: false
-          - columnKey: alert-rule-name
-            columnLabel: Alert Rule
-            isDynamic: null
-            visible: false
-          - columnKey: alert-escalation-chain
-            columnLabel: Escalation Chain
-            isDynamic: null
-            visible: false
-          - columnKey: alert-datasource-instance-description
-            columnLabel: Instance Description
-            isDynamic: null
-            visible: false
-          - columnKey: alert-full-path
-            columnLabel: Full Path
-            isDynamic: null
-            visible: false
-          - columnKey: alert-static-threshold
-            columnLabel: Static Threshold
-            isDynamic: null
-            visible: true
-          - columnKey: alert-dynamic-threshold
-            columnLabel: Dynamic Threshold
-            isDynamic: null
-            visible: true
-          - columnKey: alert-routing-state
-            columnLabel: Routing State
-            isDynamic: null
-            visible: false
-          - columnKey: alert-dependency-role
-            columnLabel: Dependency Role
-            isDynamic: null
-            visible: false
-          - columnKey: alert-dependent-alerts
-            columnLabel: Dependent Alerts
-            isDynamic: null
-            visible: false
-          fontsize: normal-font
-          isShowAll: false
-          showFilter: false
-          sort: startEpoch
-          sortDirection: desc
-        filters:
-          acked: all
-          anomaly: ''
-          chain: ''
-          cleared: 'no'
-          dataPoint: ''
-          dataSource: ''
-          dependencyRole: ''
-          dependencyRoutingState: ''
-          group: '%23%23vcenter_root%23%23*'
-          host: vcs.uni1.den3.loc
-          instance: ''
-          keyword: ''
-          rule: ''
-          sdted: all
-          severity: critical
-        interval: 3
-        lastUpdatedBy: user@factioninc.com
-        lastUpdatedOn: 1670258104
-        name: vCenter Alerts
-        parsedFilters:
-          acked: all
-          anomaly: ''
-          chain: ''
-          cleared: 'no'
-          dataPoint: ''
-          dataSource: ''
-          dependencyRole: ''
-          dependencyRoutingState: ''
-          group: Devices+by+Type%2FVMware+vCenters*
-          host: vcs.uni1.den3.loc
-          instance: ''
-          keyword: ''
-          rule: ''
-          sdted: all
-          severity: critical
-        theme: newSolidDarkBlue
-        timescale: day
-        type: alert
-        userPermission: write
-    WidgetBigNumber:
-      type: object
-      properties:
-        identifier:
-          type: string
-          nullable: false
-        name:
-          type: string
-          nullable: false
-        type:
-          type: string
-          nullable: false
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              position:
-                type: integer
-              rounding:
-                type: integer
-              bottom_label:
-                type: string
-              value:
-                type: number
-              right_label:
-                type: string
-              color_level:
-                type: integer
-              error_message:
-                type: string
-              use_comma_separators:
-                type: boolean
-      example:
-        identifier: '3486'
-        name: Stats
-        type: bigNumber
-        items:
-        - position: 1
-          rounding: 0
-          bottomLabel: ''
-          value: 791.625
-          rightLabel: Total TB
-          colorLevel: 0
-          errorMessage: ''
-          useCommaSeparators: false
     FactionConnectionLocations:
       type: array
       minItems: 1
@@ -7030,43 +6317,616 @@ components:
         message: Bad Request
         detail: Valid request is required
         path: /the/called/path-here
-    FactionLocation:
-      required:
-      - identifier
+    Dashboard:
       type: object
       properties:
         identifier:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
           type: string
+          nullable: false
         name:
-          pattern: '[a-zA-Z0-9-_]+'
           type: string
-        city:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-      example:
-        identifier: DC15
-        name: US-Reston-15
-        city: Reston
-    LocationAvailability:
-      type: object
-      properties:
-        regions:
+          nullable: false
+        widgetsConfiguration:
           type: array
           items:
-            maxLength: 36
-            minLength: 0
-            pattern: '[a-zA-Z0-9-_]+'
-            type: string
-        provider:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
+            $ref: '#/components/schemas/WidgetConfiguration'
+          nullable: false
+      additionalProperties: false
+    WidgetConfiguration:
+      type: object
+      properties:
+        identifier:
           type: string
+          nullable: false
+        type:
+          type: string
+          enum:
+          - cgraph
+          - table
+        col:
+          type: number
+          nullable: false
+        sizex:
+          type: number
+          nullable: false
+        row:
+          type: number
+          nullable: false
+        sizey:
+          type: number
+          nullable: false
+      additionalProperties: true
+    WidgetLine:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        verticalLabel:
+          type: string
+          nullable: false
+        startTime:
+          type: number
+          nullable: false
+        endTime:
+          type: number
+          nullable: false
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              visible:
+                type: boolean
+              legend:
+                type: string
+              data:
+                type: array
+                items:
+                  type: number
+              color:
+                type: string
+              label:
+                type: string
+              min:
+                type: number
+              max:
+                type: number
+              avg:
+                type: number
+        timestamps:
+          type: array
+          items:
+            type: number
+      additionalProperties: true
+    WidgetTable:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        pageSize:
+          type: string
+        columnHeaders:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              visible:
+                type: boolean
+              size:
+                type: number
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              deviceId:
+                type: number
+              deviceDisplayName:
+                type: string
+              cells:
+                type: array
+                items:
+                  type: number
+      additionalProperties: true
+    WidgetAlert:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        type:
+          type: string
+          nullable: false
+        searchId:
+          type: string
+          nullable: false
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+              internalId:
+                type: string
+              startEpoch:
+                type: integer
+              endEpoch:
+                type: integer
+              acked:
+                type: boolean
+              ackedEpoch:
+                type: string
+              ackedBy:
+                type: string
+              ackComment:
+                type: string
+              rule:
+                type: string
+              ruleId:
+                type: integer
+              chain:
+                type: string
+              chainId:
+                type: integer
+              subChainId:
+                type: integer
+              nextRecipient:
+                type: integer
+              receivedList:
+                type: string
+              severity:
+                type: integer
+              cleared:
+                type: boolean
+              sdted:
+                type: boolean
+              SDT:
+                type: object
+                nullable: true
+                properties:
+                  description:
+                    type: string
+              alertValue:
+                type: string
+              threshold:
+                type: string
+              clearValue:
+                type: string
+              monitorObjectId:
+                type: integer
+              monitorObjectType:
+                type: string
+              monitorObjectName:
+                type: string
+              monitorObjectGroups:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    fullPath:
+                      type: string
+                    groupType:
+                      type: integer
+                    servicesTemplatesId:
+                      type: integer
+                    name:
+                      type: string
+                    defaultAgentId:
+                      type: integer
+                    description:
+                      type: string
+                    alertEnable:
+                      type: boolean
+                    appliesTo:
+                      type: string
+                    id:
+                      type: integer
+                    createdOn:
+                      type: integer
+                    parentId:
+                      type: integer
+              resourceId:
+                type: integer
+              resourceTemplateId:
+                type: integer
+              resourceTemplateType:
+                type: string
+              resourceTemplateName:
+                type: string
+              instanceId:
+                type: integer
+              instanceName:
+                type: string
+              instanceDescription:
+                type: string
+              dataPointName:
+                type: string
+              dataPointId:
+                type: integer
+              detailMessage:
+                type: object
+                nullable: true
+                properties:
+                  description:
+                    type: string
+              customColumns:
+                type: object
+              enableAnomalyAlertSuppression:
+                type: string
+              enableAnomalyAlertGeneration:
+                type: string
+      example:
+        type: alert
+        name: vCenter Alerts
+        title: vCenter Alerts
+        searchId: ''
+        total: 16
+        items:
+        - id: DS57407296
+          type: dataSourceAlert
+          internalId: LMD33767083
+          startEpoch: 1691587541
+          endEpoch: 0
+          acked: false
+          ackedEpoch: 0
+          ackedBy: ''
+          ackComment: ''
+          rule: Critical
+          ruleId: 3
+          chain: default
+          chainId: 1
+          subChainId: 0
+          nextRecipient: 0
+          receivedList: ''
+          severity: 4
+          cleared: false
+          sdted: false
+          SDT: null
+          alertValue: '3.0'
+          threshold: = 0 2 3 timezone=America/Denver
+          clearValue: ''
+          monitorObjectId: 705
+          monitorObjectType: device
+          monitorObjectName: vcs.uni1.den3.loc
+          monitorObjectGroups:
+          - fullPath: Devices by Type/VMware vCenters
+            groupType: 0
+            servicesTemplatesId: 0
+            name: VMware vCenters
+            defaultAgentId: 0
+            description: ''
+            alertEnable: true
+            appliesTo: system.virtualization =~ "VMware ESX vcenter"
+            id: 7
+            createdOn: 0
+            parentId: 2
+          resourceId: 30856
+          resourceTemplateId: 1253
+          resourceTemplateType: DS
+          resourceTemplateName: VMware Alerts
+          instanceId: 96965708
+          instanceName: VMware_vCenter_Alerts-esxi105.uni1.den3.loc/Cannot connect
+            to storage
+          instanceDescription: Default alarm to monitor host connectivity to storage
+            device
+          dataPointName: State
+          dataPointId: 12920
+          detailMessage: null
+          customColumns: {}
+          enableAnomalyAlertSuppression: ''
+          enableAnomalyAlertGeneration: ''
+    WidgetAlertSettings:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+        lastUpdatedOn:
+          type: number
+        lastUpdatedBy:
+          type: string
+        theme:
+          type: string
+        userPermission:
+          type: string
+        interval:
+          type: number
+        timescale:
+          type: string
+        displaySettings:
+          type: object
+          properties:
+            isShowAll:
+              type: boolean
+            showFilter:
+              type: boolean
+            columns:
+              type: array
+              items:
+                type: object
+                properties:
+                  visible:
+                    type: boolean
+                  isDynamic:
+                    type: boolean
+                  columnLabel:
+                    type: string
+                  columnKey:
+                    type: string
+            fontsize:
+              type: string
+            sort:
+              type: string
+        filters:
+          type: object
+          properties:
+            group:
+              type: string
+            host:
+              type: string
+            dataSource:
+              type: string
+            instance:
+              type: string
+            dataPoint:
+              type: string
+            severity:
+              type: string
+            acked:
+              type: string
+            sdted:
+              type: string
+            rule:
+              type: string
+            chain:
+              type: string
+            cleared:
+              type: string
+            keyword:
+              type: string
+            dependencyRole:
+              type: string
+            dependencyRoutingState:
+              type: string
+            anomaly:
+              type: string
+        parsedFilters:
+          type: object
+          properties:
+            group:
+              type: string
+            host:
+              type: string
+            dataSource:
+              type: string
+            instance:
+              type: string
+            dataPoint:
+              type: string
+            severity:
+              type: string
+            acked:
+              type: string
+            sdted:
+              type: string
+            rule:
+              type: string
+            chain:
+              type: string
+            cleared:
+              type: string
+            keyword:
+              type: string
+            dependencyRole:
+              type: string
+            dependencyRoutingState:
+              type: string
+            anomaly:
+              type: string
+      example:
+        description: ''
+        displaySettings:
+          columns:
+          - columnKey: alert-severity
+            columnLabel: Severity
+            isDynamic: null
+            visible: false
+          - columnKey: alert-began
+            columnLabel: Began
+            isDynamic: null
+            visible: true
+          - columnKey: alert-device
+            columnLabel: Resource/Website
+            isDynamic: null
+            visible: true
+          - columnKey: alert-datasource
+            columnLabel: LogicModule
+            isDynamic: null
+            visible: true
+          - columnKey: alert-datasource-instance
+            columnLabel: Instance
+            isDynamic: null
+            visible: true
+          - columnKey: alert-datapoint
+            columnLabel: Datapoint
+            isDynamic: null
+            visible: true
+          - columnKey: alert-value
+            columnLabel: Value
+            isDynamic: null
+            visible: true
+          - columnKey: alert-group
+            columnLabel: Group
+            isDynamic: null
+            visible: false
+          - columnKey: alert-notes
+            columnLabel: Notes
+            isDynamic: null
+            visible: false
+          - columnKey: alert-acked-by
+            columnLabel: Acknowledged By
+            isDynamic: null
+            visible: false
+          - columnKey: alert-acked-on
+            columnLabel: Acknowledged On
+            isDynamic: null
+            visible: false
+          - columnKey: alert-cleared-on
+            columnLabel: Cleared On
+            isDynamic: null
+            visible: false
+          - columnKey: alert-in-sdt
+            columnLabel: In SDT
+            isDynamic: null
+            visible: false
+          - columnKey: alert-rule-name
+            columnLabel: Alert Rule
+            isDynamic: null
+            visible: false
+          - columnKey: alert-escalation-chain
+            columnLabel: Escalation Chain
+            isDynamic: null
+            visible: false
+          - columnKey: alert-datasource-instance-description
+            columnLabel: Instance Description
+            isDynamic: null
+            visible: false
+          - columnKey: alert-full-path
+            columnLabel: Full Path
+            isDynamic: null
+            visible: false
+          - columnKey: alert-static-threshold
+            columnLabel: Static Threshold
+            isDynamic: null
+            visible: true
+          - columnKey: alert-dynamic-threshold
+            columnLabel: Dynamic Threshold
+            isDynamic: null
+            visible: true
+          - columnKey: alert-routing-state
+            columnLabel: Routing State
+            isDynamic: null
+            visible: false
+          - columnKey: alert-dependency-role
+            columnLabel: Dependency Role
+            isDynamic: null
+            visible: false
+          - columnKey: alert-dependent-alerts
+            columnLabel: Dependent Alerts
+            isDynamic: null
+            visible: false
+          fontsize: normal-font
+          isShowAll: false
+          showFilter: false
+          sort: startEpoch
+          sortDirection: desc
+        filters:
+          acked: all
+          anomaly: ''
+          chain: ''
+          cleared: 'no'
+          dataPoint: ''
+          dataSource: ''
+          dependencyRole: ''
+          dependencyRoutingState: ''
+          group: '%23%23vcenter_root%23%23*'
+          host: vcs.uni1.den3.loc
+          instance: ''
+          keyword: ''
+          rule: ''
+          sdted: all
+          severity: critical
+        interval: 3
+        lastUpdatedBy: user@factioninc.com
+        lastUpdatedOn: 1670258104
+        name: vCenter Alerts
+        parsedFilters:
+          acked: all
+          anomaly: ''
+          chain: ''
+          cleared: 'no'
+          dataPoint: ''
+          dataSource: ''
+          dependencyRole: ''
+          dependencyRoutingState: ''
+          group: Devices+by+Type%2FVMware+vCenters*
+          host: vcs.uni1.den3.loc
+          instance: ''
+          keyword: ''
+          rule: ''
+          sdted: all
+          severity: critical
+        theme: newSolidDarkBlue
+        timescale: day
+        type: alert
+        userPermission: write
+    WidgetBigNumber:
+      type: object
+      properties:
+        identifier:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        type:
+          type: string
+          nullable: false
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              position:
+                type: integer
+              rounding:
+                type: integer
+              bottom_label:
+                type: string
+              value:
+                type: number
+              right_label:
+                type: string
+              color_level:
+                type: integer
+              error_message:
+                type: string
+              use_comma_separators:
+                type: boolean
+      example:
+        identifier: '3486'
+        name: Stats
+        type: bigNumber
+        items:
+        - position: 1
+          rounding: 0
+          bottomLabel: ''
+          value: 791.625
+          rightLabel: Total TB
+          colorLevel: 0
+          errorMessage: ''
+          useCommaSeparators: false
     User:
       type: object
       properties:
@@ -7241,6 +7101,146 @@ components:
       type: object
       properties:
         email:
+          type: string
+    CCV:
+      required:
+      - identifier
+      - factionLocationId
+      - iqns
+      - name
+      - networks
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        type:
+          type: string
+        tier:
+          type: string
+        totalSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        usedSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        iops:
+          minimum: 0
+          type: number
+          format: float
+        sloThroughput:
+          maximum: 9223372036854776000
+          minimum: 0
+          type: integer
+          format: int64
+        factionLocationId:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        networks:
+          minItems: 1
+          type: array
+          items:
+            type: string
+        iqns:
+          type: array
+          items:
+            type: string
+        currentOperationId:
+          type: string
+          format: uuid
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          $ref: '#/components/schemas/CCVVersion'
+      additionalProperties: false
+      example:
+        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+        name: Example CCV v3
+        type: File Scale Out
+        tier: elite
+        totalSizeInBytes: 4096
+        usedSizeInBytes: 1024
+        iops: 0
+        sloThroughput: 25
+        factionLocationId: DC15
+        networks:
+        - network1
+        - network2
+        iqns:
+        - igns1
+        - iqns2
+        version: V3
+        createdAt: '2020-01-30T08:30:00Z'
+    CCVVersion:
+      type: string
+      enum:
+      - V2
+      - V3
+    CCVMetrics:
+      type: object
+      properties:
+        health:
+          $ref: '#/components/schemas/CCVHealthStatus'
+        capacity:
+          type: object
+          properties:
+            total:
+              type: number
+              example: 10
+            used:
+              type: number
+              example: 1
+    CCVHealthStatus:
+      type: string
+      enum:
+      - healthy
+      - unhealthy
+    FactionLocation:
+      required:
+      - identifier
+      type: object
+      properties:
+        identifier:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        name:
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        city:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+      example:
+        identifier: DC15
+        name: US-Reston-15
+        city: Reston
+    LocationAvailability:
+      type: object
+      properties:
+        regions:
+          type: array
+          items:
+            maxLength: 36
+            minLength: 0
+            pattern: '[a-zA-Z0-9-_]+'
+            type: string
+        provider:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
           type: string
   securitySchemes:
     orgContextAuthorizer:
