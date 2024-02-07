@@ -29,12 +29,10 @@
     "issueType": "DEPENDENCY"
   },
   "remediateSettings": {
-    "baseBranches": [
-      "main"
-    ],
     "workflowRules": {
       "enabled": true
     },
+    "baseBranches": ["main"],
     "enableRenovate": true,
     "timezone": "America/Denver",
     "extends": [
