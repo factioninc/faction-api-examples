@@ -1,6 +1,90 @@
 {
-  "settingsInheritedFrom": "factioninc/whitesource-config@main",
-   "remediateSettings": {
+  "scanSettings": {
+    "configMode": "AUTO",
+    "configExternalURL": "",
+    "projectToken": "",
+    "exploitability": true,
+    "repoNameSync": true,
      "baseBranches": ["main"]
-   }
-} 
+  },
+   "scanSettingsSAST": {
+    "enableScan": false,
+    "scanPullRequests": false,
+    "incrementalScan": false,
+    "baseBranches": [],
+    "snippetSize": 10
+  },
+  "checkRunSettings": {
+    "vulnerableCheckRunConclusionLevel": "failure",
+    "displayMode": "diff",
+    "strictMode": "warning",
+    "useMendCheckNames": true
+  },
+    "checkRunSettingsSAST": {
+    "checkRunConclusionLevel": "success",
+    "severityThreshold": "high"
+  },
+  "issueSettings": {
+    "minSeverityLevel": "LOW",
+    "issueType": "DEPENDENCY"
+  },
+  "remediateSettings": {
+    "baseBranches": [
+      "main"
+    ],
+    "workflowRules": {
+      "enabled": true
+    },
+    "enableRenovate": true,
+    "timezone": "America/Denver",
+    "extends": [
+      ":dependencyDashboard",
+      ":approveMajorUpdates",
+      ":semanticPrefixFixDepsChoreOthers",
+      ":prConcurrentLimit10",
+      ":prHourlyLimitNone",
+      ":automergeTypes",
+      "group:monorepos",
+      "group:recommended",
+      "workarounds:all",
+      "github>whitesource/merge-confidence:beta",
+      "docker:disable"
+    ],
+    "ignorePaths": [
+      "**/node_modules/**",
+      "**/bower_components/**",
+      "**/vendor/**",
+      "**/examples/**",
+      "**/__fixtures__/**"
+    ],
+    "transitiveRemediation": true,
+    "packageRules": [
+      {
+        "matchUpdateTypes": [
+          "patch",
+          "pin",
+          "minor"
+        ],
+        "automerge": true
+      },
+      {
+        "matchDepTypes": [
+          "devDependencies"
+        ],
+        "automerge": true
+      },
+      {
+        "matchManagers": [
+          "npm"
+        ],
+        "rangeStrategy": "auto"
+      },
+      {
+        "matchConfidence": [
+          "low"
+        ],
+        "dependencyDashboardApproval": true
+      }
+    ]
+  }
+}
