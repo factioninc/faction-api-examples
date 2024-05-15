@@ -26,247 +26,6 @@ info:
 servers:
 - url: https://api.factioninc.com
 paths:
-  /v1/locations:
-    get:
-      description: Gets the list of Faction Locations which currently provide services
-        to a particular customer
-      summary: Lists Faction datacenters accessible by user's permissions
-      tags:
-      - Faction Location
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        required: true
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FactionLocation'
-              example:
-              - identifier: DEN3
-                name: US - Denver - 3
-                city: Denver
-              - identifier: DC15
-                name: US - Reston - 15
-                city: Reston
-              - identifier: SV12
-                name: US - Silicon Valley - 3
-                city: Silicon Valley
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Error not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/locations/{locationId}/availabilities:
-    get:
-      description: Gets the list of Faction Locations which currently provide services
-        to a particular customer
-      summary: Lists services available at a specified datacenter.
-      tags:
-      - Faction Location
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        required: true
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-      - name: locationId
-        in: path
-        required: true
-        schema:
-          type: string
-          nullable: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LocationAvailability'
-              example:
-              - regions:
-                - us-east-2
-                - us-east-1
-                - us-west-1
-                - us-west-2
-                - eu-central-1
-                - eu-west-2
-                provider: Aws
-              - regions:
-                - us-ashburn-1
-                - ap-osaka-1
-                provider: Oci
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Error not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v1/fix/connections:
     post:
       description: Create a new FIX Connection.
@@ -720,6 +479,1319 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDto'
+  /v1/ccv/volumes:
+    get:
+      summary: Get all CCVs
+      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
+        for an organization based on the Organization Identifier
+
+        provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CCV'
+              example:
+              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}:
+    get:
+      summary: Get CCV by ID
+      description: 'Returns the information regarding a particular Cloud Control Volume
+        (CCV)
+
+        based on the Organization Identifier provided in the X-Organization-Id header.
+
+        '
+      operationId: ccvVolumeIdGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCV'
+              example:
+                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+                name: Example CCV v3
+                type: File Scale Out
+                tier: elite
+                factionLocationId: DC15
+                iops: 0
+                iqns:
+                - igns1
+                - iqns2
+                networks:
+                - network1
+                - network2
+                sloThroughput: 25
+                totalSizeInBytes: 4096
+                usedSizeInBytes: 1024
+                createdAt: '2020-01-30T08:30:00Z'
+                version: V3
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/ccv/volumes/{ccvId}/metrics:
+    get:
+      summary: Get CCV metrics
+      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
+        ccvId.
+
+        Metrics include the CCV status, total capacity in bytes, and used capacity
+        in bytes.
+
+        '
+      operationId: ccvMetricsGet
+      tags:
+      - CCVs
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ccvId
+        in: path
+        schema:
+          type: string
+          format: uuid
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CCVMetrics'
+              example:
+                health: healthy
+                capacity:
+                  total: 10
+                  used: 1
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets:
+    get:
+      summary: Get tickets
+      description: "Gets the list of support tickets for the organization specified\
+        \ by the X-Organization-Id header. \nThe following query parameters are available\
+        \ for filtering the returned tickets:\n  - status\n  - number\n  - title\n\
+        \  - lastUpdatedFrom\n  - lastUpdatedTo\n  - openedAtFrom\n  - openedAtTo\n\
+        \nPagination is available by providing <b>offset</b> and <b>limit</b>\nquery\
+        \ parameters. Sorting is controlled by specifying <b>sortField</b> \nand <b>sortDirection</b>.\n"
+      operationId: ticketsGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: offset
+        in: query
+        description: The response offset for the pagination
+        schema:
+          type: number
+          nullable: false
+          format: number
+      - name: limit
+        in: query
+        description: The response limit for the pagination
+        schema:
+          type: number
+          nullable: false
+          format: number
+      - name: number
+        in: query
+        description: The ticket number to use as a filter.
+        schema:
+          type: number
+          nullable: false
+          format: number
+      - name: status
+        in: query
+        description: The list of statuses to use as a filter.
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketStatus'
+      - name: lastUpdatedFrom
+        in: query
+        description: The starting date to use as a filter.
+        schema:
+          type: string
+          format: date-time
+      - name: lastUpdatedTo
+        in: query
+        description: The end date to use as a filter.
+        schema:
+          type: string
+          format: date-time
+      - name: openedAtFrom
+        in: query
+        description: The starting date to use as a filter.
+        schema:
+          type: string
+          format: date-time
+      - name: openedAtTo
+        in: query
+        description: The end date to use as a filter.
+        schema:
+          type: string
+          format: date-time
+      - name: title
+        in: query
+        description: The title to use as a filter.
+        schema:
+          type: string
+      - name: sortField
+        in: query
+        description: The field name to use for sort tickets.
+        schema:
+          $ref: '#/components/schemas/SortField'
+      - name: sortDirection
+        in: query
+        description: The sort direction
+        schema:
+          $ref: '#/components/schemas/SortDirection'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    post:
+      summary: Create ticket
+      description: "Creates a new support ticket for the given organization.\nProvide\
+        \ a title for the ticket along with a description of the requested support.\n\
+        Upon successful creation, a ticket will notify the Faction Inc. support team\
+        \ \nto provide assistance.\nThe request body has the following inputs:\n-\
+        \ title: The title of the new ticket.\n- description: A description of the\
+        \ requested support.\n"
+      operationId: ticketsPost
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicket'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets/{ticketId}:
+    get:
+      summary: Get a single ticket
+      description: 'Gets the details of a single support ticket.
+
+        Specify the requested ticket by supplying the ticket''s <b>identifier</b>
+
+        as the <b>ticketId</b> field in the request path.
+
+        '
+      operationId: ticketGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets/{ticketId}/attachments:
+    get:
+      summary: Get ticket attachments
+      description: "Gets the metadata for each attachment on a support ticket.\nSpecify\
+        \ the requested ticket by supplying the ticket's <b>identifier</b> \nas the\
+        \ <b>ticketId</b> field in the request path. \nUse the `/{ticketId}/attachments/{attachmentId}`\
+        \ endpoint to get the attachment itself.\n"
+      operationId: ticketAttachmentsGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TicketAttachment'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    post:
+      summary: Add attachment to ticket
+      description: "Add a new attachment to a specific support ticket.\nThe request\
+        \ body Content-Type is `multipart/form-data` and contains the file to be attached.\n\
+        Attachments can be text, image, or video files.\nSupported attachment file\
+        \ types include:\n  - .txt\n  - .pdf\n  - .doc\n  - .docx\n  - .xls\n  - .xlsx\n\
+        \  - .png\n  - .jpg\n  - .jpeg\n  - .gif\n  - .svg\n  - .mp4\n  - .mov\n"
+      operationId: ticketAttachmentsPost
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateTicketAttachment'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketAttachment'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets/{ticketId}/attachments/{attachmentId}:
+    get:
+      summary: Get ticket attachment
+      description: "Retrieves the contents of a ticket attachment. \nAttachments are\
+        \ used to provide additional information \nabout a ticket after its creation.\n\
+        Attachments can be text, image, or video files.\n"
+      operationId: ticketAttachmentGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: attachmentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/tickets/{ticketId}/comments:
+    get:
+      summary: Get ticket comments
+      description: 'Returns the list of comments for a support ticket.
+
+        Comments are used to provide additional information about a ticket after its
+        creation.
+
+        '
+      operationId: ticketCommentsGet
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TicketComment'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+    post:
+      summary: Add ticket comment
+      description: 'Add a new comment to the support ticket with identifier ticketId.
+
+        Comments are used to provide additional information about a ticket after its
+        creation.
+
+        Max comment length is 5000 characters.
+
+        The request body has the following inputs:
+
+        - text: The comment text.
+
+        '
+      operationId: ticketCommentsPost
+      tags:
+      - Tickets
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+        required: true
+      - name: ticketId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicketComment'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketComment'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/organizations:
     get:
       summary: Get list of organizations
@@ -2416,6 +3488,247 @@ paths:
               explode: false
               schema:
                 type: string
+  /v1/locations:
+    get:
+      description: Gets the list of Faction Locations which currently provide services
+        to a particular customer
+      summary: Lists Faction datacenters accessible by user's permissions
+      tags:
+      - Faction Location
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FactionLocation'
+              example:
+              - identifier: DEN3
+                name: US - Denver - 3
+                city: Denver
+              - identifier: DC15
+                name: US - Reston - 15
+                city: Reston
+              - identifier: SV12
+                name: US - Silicon Valley - 3
+                city: Silicon Valley
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /v1/locations/{locationId}/availabilities:
+    get:
+      description: Gets the list of Faction Locations which currently provide services
+        to a particular customer
+      summary: Lists services available at a specified datacenter.
+      tags:
+      - Faction Location
+      parameters:
+      - name: X-Organization-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          nullable: false
+          format: uuid
+      - name: locationId
+        in: path
+        required: true
+        schema:
+          type: string
+          nullable: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationAvailability'
+              example:
+              - regions:
+                - us-east-2
+                - us-east-1
+                - us-west-1
+                - us-west-2
+                - eu-central-1
+                - eu-west-2
+                provider: Aws
+              - regions:
+                - us-ashburn-1
+                - ap-osaka-1
+                provider: Oci
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        '404':
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+          headers:
+            Access-Control-Allow-Origin:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              style: simple
+              explode: false
+              schema:
+                type: string
   /v1/users:
     get:
       description: Gets the list of Users for given Organization.
@@ -3575,367 +4888,6 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/ccv/volumes:
-    get:
-      summary: Get all CCVs
-      description: 'Returns a list of every Cloud Control Volume (CCV) provisioned
-        for an organization based on the Organization Identifier
-
-        provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CCV'
-              example:
-              - identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}:
-    get:
-      summary: Get CCV by ID
-      description: 'Returns the information regarding a particular Cloud Control Volume
-        (CCV)
-
-        based on the Organization Identifier provided in the X-Organization-Id header.
-
-        '
-      operationId: ccvVolumeIdGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCV'
-              example:
-                identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-                name: Example CCV v3
-                type: File Scale Out
-                tier: elite
-                factionLocationId: DC15
-                iops: 0
-                iqns:
-                - igns1
-                - iqns2
-                networks:
-                - network1
-                - network2
-                sloThroughput: 25
-                totalSizeInBytes: 4096
-                usedSizeInBytes: 1024
-                createdAt: '2020-01-30T08:30:00Z'
-                version: V3
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/ccv/volumes/{ccvId}/metrics:
-    get:
-      summary: Get CCV metrics
-      description: 'Gets the metrics for the Cloud Control Volume (CCV) with the provided
-        ccvId.
-
-        Metrics include the CCV status, total capacity in bytes, and used capacity
-        in bytes.
-
-        '
-      operationId: ccvMetricsGet
-      tags:
-      - CCVs
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ccvId
-        in: path
-        schema:
-          type: string
-          format: uuid
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CCVMetrics'
-              example:
-                health: healthy
-                capacity:
-                  total: 10
-                  used: 1
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
   /v1/dashboards:
     get:
       description: Returns a list of the dashboards with basic widgets configuration
@@ -4302,958 +5254,6 @@ paths:
               explode: false
               schema:
                 type: string
-  /v1/tickets:
-    get:
-      summary: Get tickets
-      description: "Gets the list of support tickets for the organization specified\
-        \ by the X-Organization-Id header. \nThe following query parameters are available\
-        \ for filtering the returned tickets:\n  - status\n  - number\n  - title\n\
-        \  - lastUpdatedFrom\n  - lastUpdatedTo\n  - openedAtFrom\n  - openedAtTo\n\
-        \nPagination is available by providing <b>offset</b> and <b>limit</b>\nquery\
-        \ parameters. Sorting is controlled by specifying <b>sortField</b> \nand <b>sortDirection</b>.\n"
-      operationId: ticketsGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: offset
-        in: query
-        description: The response offset for the pagination
-        schema:
-          type: number
-          nullable: false
-          format: number
-      - name: limit
-        in: query
-        description: The response limit for the pagination
-        schema:
-          type: number
-          nullable: false
-          format: number
-      - name: number
-        in: query
-        description: The ticket number to use as a filter.
-        schema:
-          type: number
-          nullable: false
-          format: number
-      - name: status
-        in: query
-        description: The list of statuses to use as a filter.
-        schema:
-          type: array
-          items:
-            $ref: '#/components/schemas/TicketStatus'
-      - name: lastUpdatedFrom
-        in: query
-        description: The starting date to use as a filter.
-        schema:
-          type: string
-          format: date-time
-      - name: lastUpdatedTo
-        in: query
-        description: The end date to use as a filter.
-        schema:
-          type: string
-          format: date-time
-      - name: openedAtFrom
-        in: query
-        description: The starting date to use as a filter.
-        schema:
-          type: string
-          format: date-time
-      - name: openedAtTo
-        in: query
-        description: The end date to use as a filter.
-        schema:
-          type: string
-          format: date-time
-      - name: title
-        in: query
-        description: The title to use as a filter.
-        schema:
-          type: string
-      - name: sortField
-        in: query
-        description: The field name to use for sort tickets.
-        schema:
-          $ref: '#/components/schemas/SortField'
-      - name: sortDirection
-        in: query
-        description: The sort direction
-        schema:
-          $ref: '#/components/schemas/SortDirection'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Ticket'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-    post:
-      summary: Create ticket
-      description: "Creates a new support ticket for the given organization.\nProvide\
-        \ a title for the ticket along with a description of the requested support.\n\
-        Upon successful creation, a ticket will notify the Faction Inc. support team\
-        \ \nto provide assistance.\nThe request body has the following inputs:\n-\
-        \ title: The title of the new ticket.\n- description: A description of the\
-        \ requested support.\n"
-      operationId: ticketsPost
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTicket'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ticket'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/tickets/{ticketId}:
-    get:
-      summary: Get a single ticket
-      description: 'Gets the details of a single support ticket.
-
-        Specify the requested ticket by supplying the ticket''s <b>identifier</b>
-
-        as the <b>ticketId</b> field in the request path.
-
-        '
-      operationId: ticketGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticketId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ticket'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/tickets/{ticketId}/attachments:
-    get:
-      summary: Get ticket attachments
-      description: "Gets the metadata for each attachment on a support ticket.\nSpecify\
-        \ the requested ticket by supplying the ticket's <b>identifier</b> \nas the\
-        \ <b>ticketId</b> field in the request path. \nUse the `/{ticketId}/attachments/{attachmentId}`\
-        \ endpoint to get the attachment itself.\n"
-      operationId: ticketAttachmentsGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticketId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TicketAttachment'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-    post:
-      summary: Add attachment to ticket
-      description: "Add a new attachment to a specific support ticket.\nThe request\
-        \ body Content-Type is `multipart/form-data` and contains the file to be attached.\n\
-        Attachments can be text, image, or video files.\nSupported attachment file\
-        \ types include:\n  - .txt\n  - .pdf\n  - .doc\n  - .docx\n  - .xls\n  - .xlsx\n\
-        \  - .png\n  - .jpg\n  - .jpeg\n  - .gif\n  - .svg\n  - .mp4\n  - .mov\n"
-      operationId: ticketAttachmentsPost
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticketId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateTicketAttachment'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TicketAttachment'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/tickets/{ticketId}/attachments/{attachmentId}:
-    get:
-      summary: Get ticket attachment
-      description: "Retrieves the contents of a ticket attachment. \nAttachments are\
-        \ used to provide additional information \nabout a ticket after its creation.\n\
-        Attachments can be text, image, or video files.\n"
-      operationId: ticketAttachmentGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticketId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - name: attachmentId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      responses:
-        '200':
-          description: Success.
-          content:
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-  /v1/tickets/{ticketId}/comments:
-    get:
-      summary: Get ticket comments
-      description: 'Returns the list of comments for a support ticket.
-
-        Comments are used to provide additional information about a ticket after its
-        creation.
-
-        '
-      operationId: ticketCommentsGet
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticketId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TicketComment'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-    post:
-      summary: Add ticket comment
-      description: 'Add a new comment to the support ticket with identifier ticketId.
-
-        Comments are used to provide additional information about a ticket after its
-        creation.
-
-        Max comment length is 5000 characters.
-
-        The request body has the following inputs:
-
-        - text: The comment text.
-
-        '
-      operationId: ticketCommentsPost
-      tags:
-      - Tickets
-      parameters:
-      - name: X-Organization-Id
-        in: header
-        schema:
-          type: string
-          nullable: false
-          format: uuid
-        required: true
-      - name: ticketId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTicketComment'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TicketComment'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorNotFound'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDto'
-          headers:
-            Access-Control-Allow-Origin:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              style: simple
-              explode: false
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              style: simple
-              explode: false
-              schema:
-                type: string
 components:
   parameters:
     X-Organization-Id:
@@ -5266,127 +5266,6 @@ components:
         nullable: false
       required: true
   schemas:
-    FactionLocation:
-      required:
-      - identifier
-      type: object
-      properties:
-        identifier:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-        name:
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-        city:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-      example:
-        identifier: DC15
-        name: US-Reston-15
-        city: Reston
-    LocationAvailability:
-      type: object
-      properties:
-        regions:
-          type: array
-          items:
-            maxLength: 36
-            minLength: 0
-            pattern: '[a-zA-Z0-9-_]+'
-            type: string
-        provider:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-    ErrorDto:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 500
-        error: Internal Server Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorNotFound:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 404
-        error: Resource Not Found Error
-        message: There was an unexpected error during your request
-        detail: Here is as much info as we can provide
-        path: /the/called/path-here
-    ErrorUnauthorized:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        status:
-          type: number
-        error:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        path:
-          type: string
-          nullable: true
-      additionalProperties: false
-      example:
-        timestamp: '2021-01-30T08:30:00Z'
-        status: 401
-        error: Provided authorization information is invalid
-        message: Unauthorized
-        detail: Valid authorization bearer token is required
-        path: /the/called/path-here
     FactionConnectionLocations:
       type: array
       minItems: 1
@@ -6001,6 +5880,330 @@ components:
         message: Bad Request
         detail: Valid request is required
         path: /the/called/path-here
+    ErrorDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 500
+        error: Internal Server Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorNotFound:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 404
+        error: Resource Not Found Error
+        message: There was an unexpected error during your request
+        detail: Here is as much info as we can provide
+        path: /the/called/path-here
+    ErrorUnauthorized:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: number
+        error:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        path:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        timestamp: '2021-01-30T08:30:00Z'
+        status: 401
+        error: Provided authorization information is invalid
+        message: Unauthorized
+        detail: Valid authorization bearer token is required
+        path: /the/called/path-here
+    CCV:
+      required:
+      - identifier
+      - factionLocationId
+      - iqns
+      - name
+      - networks
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        type:
+          type: string
+        tier:
+          type: string
+        totalSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        usedSizeInBytes:
+          type: integer
+          format: int64
+          nullable: true
+        iops:
+          minimum: 0
+          type: number
+          format: float
+        sloThroughput:
+          maximum: 9223372036854776000
+          minimum: 0
+          type: integer
+          format: int64
+        factionLocationId:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        networks:
+          minItems: 1
+          type: array
+          items:
+            type: string
+        iqns:
+          type: array
+          items:
+            type: string
+        currentOperationId:
+          type: string
+          format: uuid
+          nullable: true
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          $ref: '#/components/schemas/CCVVersion'
+      additionalProperties: false
+      example:
+        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
+        name: Example CCV v3
+        type: File Scale Out
+        tier: elite
+        totalSizeInBytes: 4096
+        usedSizeInBytes: 1024
+        iops: 0
+        sloThroughput: 25
+        factionLocationId: DC15
+        networks:
+        - network1
+        - network2
+        iqns:
+        - igns1
+        - iqns2
+        version: V3
+        createdAt: '2020-01-30T08:30:00Z'
+    CCVVersion:
+      type: string
+      enum:
+      - V2
+      - V3
+    CCVMetrics:
+      type: object
+      properties:
+        health:
+          $ref: '#/components/schemas/CCVHealthStatus'
+        capacity:
+          type: object
+          properties:
+            total:
+              type: number
+              example: 10
+            used:
+              type: number
+              example: 1
+    CCVHealthStatus:
+      type: string
+      enum:
+      - healthy
+      - unhealthy
+    CreateTicket:
+      type: object
+      required:
+      - title
+      - description
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+      additionalProperties: false
+      example:
+        title: Sample problem
+        description: This is where the description of a problem that a customer is
+          experiencing will be added
+    Ticket:
+      type: object
+      required:
+      - identifier
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        number:
+          type: string
+        state:
+          $ref: '#/components/schemas/TicketStatus'
+        lastUpdated:
+          type: string
+          format: date-time
+        openedAt:
+          type: string
+          format: date-time
+        openedBy:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+      additionalProperties: false
+      example:
+        identifier: 02a2988d-eeb5-45cd-9d48-9acd1088de8e
+        number: CASE 010110
+        state: In Progress
+        lastUpdated: '2021-01-21T08:30:00Z'
+        openedAt: '2021-01-28T13:30:00Z'
+        openedBy: user@cutomer.com
+        title: Sample Case Ticket
+        description: Sample of a Case Ticket
+    CreateTicketComment:
+      type: object
+      required:
+      - text
+      properties:
+        text:
+          type: string
+      example:
+        text: This is a sample comment, which will be added to the ticket
+    TicketComment:
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        text:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+      example:
+        identifier: fcc3e4f0-e7e7-4b94-8a09-0821c057c416
+        text: Example comment from support
+        createdAt: '2021-01-21T08:30:00Z'
+        createdBy: support@factioninc.com
+    CreateTicketAttachment:
+      type: object
+      required:
+      - fileName
+      properties:
+        fileName:
+          type: string
+    TicketAttachment:
+      type: object
+      required:
+      - identifier
+      properties:
+        identifier:
+          type: string
+        fileName:
+          type: string
+        sizeBytes:
+          type: number
+        ticketId:
+          type: string
+        contentType:
+          type: string
+        createdAt:
+          type: string
+        createdBy:
+          type: string
+      example:
+        identifier: 428cf5d7-0c14-403c-8d2b-795e8adf1853
+        fileName: test_file.jpg
+        sizeInBytes: 1258290
+        ticketId: 6fa55f1b-bb1f-4339-94f7-29e3e9cffb4c
+        contentType: image/png
+        createdAt: '2021-01-21T08:30:00Z'
+        createBy: user@customer.com
+    TicketStatus:
+      type: string
+      enum:
+      - New
+      - Monitoring
+      - Acknowledged
+      - Open
+      - Closed
+      - Assigned
+      - In progress
+      - Resolved
+      - Cancelled
+      - On hold
+      - Awaiting Info
+    SortField:
+      type: string
+      enum:
+      - title
+      - number
+      - openedAt
+      - lastUpdated
+      - state
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
     Organization:
       required:
       - name
@@ -6217,6 +6420,43 @@ components:
         roles:
         - User
         - Technician
+    FactionLocation:
+      required:
+      - identifier
+      type: object
+      properties:
+        identifier:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        name:
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+        city:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
+      example:
+        identifier: DC15
+        name: US-Reston-15
+        city: Reston
+    LocationAvailability:
+      type: object
+      properties:
+        regions:
+          type: array
+          items:
+            maxLength: 36
+            minLength: 0
+            pattern: '[a-zA-Z0-9-_]+'
+            type: string
+        provider:
+          maxLength: 36
+          minLength: 0
+          pattern: '[a-zA-Z0-9-_]+'
+          type: string
     User:
       type: object
       properties:
@@ -6392,109 +6632,6 @@ components:
       properties:
         email:
           type: string
-    CCV:
-      required:
-      - identifier
-      - factionLocationId
-      - iqns
-      - name
-      - networks
-      type: object
-      properties:
-        identifier:
-          type: string
-          format: uuid
-          nullable: true
-        name:
-          type: string
-        type:
-          type: string
-        tier:
-          type: string
-        totalSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        usedSizeInBytes:
-          type: integer
-          format: int64
-          nullable: true
-        iops:
-          minimum: 0
-          type: number
-          format: float
-        sloThroughput:
-          maximum: 9223372036854776000
-          minimum: 0
-          type: integer
-          format: int64
-        factionLocationId:
-          maxLength: 36
-          minLength: 0
-          pattern: '[a-zA-Z0-9-_]+'
-          type: string
-        networks:
-          minItems: 1
-          type: array
-          items:
-            type: string
-        iqns:
-          type: array
-          items:
-            type: string
-        currentOperationId:
-          type: string
-          format: uuid
-          nullable: true
-        createdDate:
-          type: string
-          format: date-time
-          nullable: true
-        version:
-          $ref: '#/components/schemas/CCVVersion'
-      additionalProperties: false
-      example:
-        identifier: 57520ae8-23a2-4a4a-a0ee-deb229952c8f
-        name: Example CCV v3
-        type: File Scale Out
-        tier: elite
-        totalSizeInBytes: 4096
-        usedSizeInBytes: 1024
-        iops: 0
-        sloThroughput: 25
-        factionLocationId: DC15
-        networks:
-        - network1
-        - network2
-        iqns:
-        - igns1
-        - iqns2
-        version: V3
-        createdAt: '2020-01-30T08:30:00Z'
-    CCVVersion:
-      type: string
-      enum:
-      - V2
-      - V3
-    CCVMetrics:
-      type: object
-      properties:
-        health:
-          $ref: '#/components/schemas/CCVHealthStatus'
-        capacity:
-          type: object
-          properties:
-            total:
-              type: number
-              example: 10
-            used:
-              type: number
-              example: 1
-    CCVHealthStatus:
-      type: string
-      enum:
-      - healthy
-      - unhealthy
     Dashboard:
       type: object
       properties:
@@ -7105,143 +7242,6 @@ components:
           colorLevel: 0
           errorMessage: ''
           useCommaSeparators: false
-    CreateTicket:
-      type: object
-      required:
-      - title
-      - description
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-      additionalProperties: false
-      example:
-        title: Sample problem
-        description: This is where the description of a problem that a customer is
-          experiencing will be added
-    Ticket:
-      type: object
-      required:
-      - identifier
-      properties:
-        identifier:
-          type: string
-          format: uuid
-        number:
-          type: string
-        state:
-          $ref: '#/components/schemas/TicketStatus'
-        lastUpdated:
-          type: string
-          format: date-time
-        openedAt:
-          type: string
-          format: date-time
-        openedBy:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-      additionalProperties: false
-      example:
-        identifier: 02a2988d-eeb5-45cd-9d48-9acd1088de8e
-        number: CASE 010110
-        state: In Progress
-        lastUpdated: '2021-01-21T08:30:00Z'
-        openedAt: '2021-01-28T13:30:00Z'
-        openedBy: user@cutomer.com
-        title: Sample Case Ticket
-        description: Sample of a Case Ticket
-    CreateTicketComment:
-      type: object
-      required:
-      - text
-      properties:
-        text:
-          type: string
-      example:
-        text: This is a sample comment, which will be added to the ticket
-    TicketComment:
-      type: object
-      properties:
-        identifier:
-          type: string
-          format: uuid
-        text:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        createdBy:
-          type: string
-      example:
-        identifier: fcc3e4f0-e7e7-4b94-8a09-0821c057c416
-        text: Example comment from support
-        createdAt: '2021-01-21T08:30:00Z'
-        createdBy: support@factioninc.com
-    CreateTicketAttachment:
-      type: object
-      required:
-      - fileName
-      properties:
-        fileName:
-          type: string
-    TicketAttachment:
-      type: object
-      required:
-      - identifier
-      properties:
-        identifier:
-          type: string
-        fileName:
-          type: string
-        sizeBytes:
-          type: number
-        ticketId:
-          type: string
-        contentType:
-          type: string
-        createdAt:
-          type: string
-        createdBy:
-          type: string
-      example:
-        identifier: 428cf5d7-0c14-403c-8d2b-795e8adf1853
-        fileName: test_file.jpg
-        sizeInBytes: 1258290
-        ticketId: 6fa55f1b-bb1f-4339-94f7-29e3e9cffb4c
-        contentType: image/png
-        createdAt: '2021-01-21T08:30:00Z'
-        createBy: user@customer.com
-    TicketStatus:
-      type: string
-      enum:
-      - New
-      - Monitoring
-      - Acknowledged
-      - Open
-      - Closed
-      - Assigned
-      - In progress
-      - Resolved
-      - Cancelled
-      - On hold
-      - Awaiting Info
-    SortField:
-      type: string
-      enum:
-      - title
-      - number
-      - openedAt
-      - lastUpdated
-      - state
-    SortDirection:
-      type: string
-      enum:
-      - asc
-      - desc
   securitySchemes:
     orgContextAuthorizer:
       description: Custom Authorizer that will validate X-Organization-Id header within
